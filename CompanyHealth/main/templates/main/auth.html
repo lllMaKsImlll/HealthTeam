@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/auth.css' %}">
+    <title>Авторизация</title>
+</head>
+<body>
+    <form class="form-section" method="post">
+        {% csrf_token %}
+        <h1>Авторизация</h1>
+        {{ form.phone }}
+        {{ form.password }}
+        <input class="button-input" type="submit" value="Войти">
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="{% url 'register' %}">
+            <p>Зарегистрироваться</p>
+        </a>
+    </form>
+
+</body>
+</html>
+

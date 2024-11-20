@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     {% load static %}
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <title>КомпанияЗдоровья</title>
+</head>
+<body>
+    {% include 'main/header.html' %}
+
+    <main>
+        <div class="subheader">
+            <div class="image-subheader">
+                <img src="{% static '/img/doctors.png' %}" alt="img-subheader">
+            </div>
+            <form action="submit">
+                <h1>Запись ко врачу онлайн</h1>
+                <div class="item-form">
+                    <img src="{% static '/img/profession.png' %}" alt="#">
+                    <input type="text" placeholder="Специальность врача">
+                </div>
+                <div class="item-form">
+                    <img src="{% static '/img/district.png' %}" alt="#">
+                    <input type="text" placeholder="Район">
+                </div>
+                <button>Найти</button>
+            </form>
+        </div>
+
+        {% if records %}
+            <div class="records-blocks">
+                <div class="title">
+                    <h1>Настоящие отзывы клиентов</h1>
+                    {% for record in records %}
+                    <div class="record-block">
+                        <img src="{{ record.image.url }}" alt="record image">
+                        <div class="record-content">
+                            <div class="center">
+                                <p>"{{ record.record }}"</p>
+                                <br/>
+                                <div class="record-meta">
+                                    <p>{{ record.name }}, {{ record.date }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="about-servies-block">
+            <div class="about-text">
+                <h1>Как работает сервис?</h1>
+                <p>«КомпанияЗдоровья» - это удобный онлайн-сервис поиска врачей, чтобы найти нужного доктора и записаться на прием. Вот как это работает</p>
+                <p>1. Выберите нужную специализацию на нашем сайте. <br>
+                    2. Используйте фильтры для уточнения параметров поиска: опыт работы, стоимость консультации. <br>
+                    3. Просмотрите профили, ознакомьтесь с квалификацией и отзывами пациентов. <br>
+                    4. Выбрав подходящего специалиста, запишитесь на прием в удобное для вас время. <br>
+                    Задать вопрос вы можете не выходя из дома, что особенно удобно для пациентов с ограниченной подвижностью или проживающих в отдаленных районах. Однако непосредственно общение с врачом проходит только в рабочее время с 8:00 до 21:00 <br> <br>
+                    Мы тщательно отбираем специалистов для нашей платформы, чтобы гарантировать высокое качество услуг. Каждый доктор проходит проверку квалификации и опыта работы! Но обращаем ваше внимание, что услуги на нашем сервисе носят информационный характер, для получение необходимой медицинской помощи следует записаться на очный приём к врачу.</p>
+            </div>
+        </div>
+
+        <div class="ask-quastion-block">
+            <h1>Есть вопросы?</h1>
+            <button>Задать вопрос</button>
+        </div>
+        
+    </main>
+
+    {% include 'main/footer.html' %}
+
+</body>
+</html>

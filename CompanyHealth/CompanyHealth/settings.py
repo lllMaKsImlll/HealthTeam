@@ -116,12 +116,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'  # URL для доступа к статическим файлам
+STATIC_URL = 'static/'
 
-# Для работы с пользовательскими статическими файлами в приложениях:
-import os
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    BASE_DIR / "static",
 ]
 
 # При использовании режима деплоя (на сервере):

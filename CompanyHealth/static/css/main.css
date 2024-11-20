@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+}
+
+header {
+    background-color: #D9D9D9;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+header h1, footer h1 {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -4px;
+}
+
+header .logo, 
+header .left-item, 
+footer .footer-menu,
+footer .logo,
+footer .socials {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+header .logo img,
+footer .logo img,
+footer .socials img {
+    width: 45px;
+    height: 45px;
+    margin-left: -20px;
+}
+
+header button {
+    display: block;
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 15px;
+    border: none;
+}
+
+/* Подвал */
+footer {
+    background-color: #63C1AF;
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+footer .footer-menu {
+    text-align: center;
+}
+
+footer .footer-menu ul {
+    list-style-type: none;
+    line-height: 1.5rem;
+}
+
+footer .footer-menu h3 {
+    font-weight: 200;
+    font-size: 32px;
+}
+
+footer .socials {
+    margin-left: 20px;
+}
+
+/* Главная часть */
+main {
+    background-color: #F2F2F2;
+}
+
+.subheader {
+    background-color: #63C1AF;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 50px 0;
+}
+
+/* Форма записи ко врачу */
+form {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+form h1 {
+    font-weight: 100;
+    font-size: 60px;
+}
+
+form .item-form {
+    display: flex;
+    gap: 20px;
+}
+
+form .item-form img {
+    width: 45px;
+    height: 45px;
+}
+
+form input {
+    color: gray;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    width: 400px;
+    background-color: #D9D9D9;
+}
+
+form button {
+    padding: 5px 10px;
+    background-color: #5B9F54;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    width: 236px;
+    height: 53px;
+    text-align: center;
+}
+
+/* Записи отзывов */
+.records-blocks h1,
+.about-servies-block h1,
+.ask-quastion-block h1 {
+    font-size: 55px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.records-blocks {
+    padding-bottom: 50px;
+}
+
+.records-blocks .record-block {
+    max-width: 1300px;
+    margin: 20px auto;
+    background-color: #D9D9D9;
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.record-block .record-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+
+.record-block img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.record-block p {
+    text-align: justify;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+/* Как работает сервис? */
+.about-servies-block {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    padding: 40px;
+}
+
+.about-servies-block .about-text {
+    width: 70%;
+    margin: 20px auto;
+}
+
+.about-servies-block p {
+    text-align: justify;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.about-servies-block ul {
+    list-style-type: none;
+}
+
+/* Есть вопросы? */
+.ask-quastion-block {
+    text-align: center;
+    padding: 150px;
+}
+
+.ask-quastion-block button {
+    background-color: #63C1AF;
+    padding: 20px 50px;
+    color: black;
+    font-size: 35px;
+    width: 530px;
+    text-align: center;
+    border: none;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+/* Страница: Запись ко врачу */
+main .one-post-search {
+    max-width: 1500px;
+    margin: 20px auto;
+    background-color: #D9D9D9;
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 1240px) {
+    .subheader {
+        display: block;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .subheader img {
+        display: none;
+    }
+
+    .record-block {
+        margin: 0 15px !important;
+    }
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
