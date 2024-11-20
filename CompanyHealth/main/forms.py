@@ -25,7 +25,7 @@ class RegistrationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Patients
+        model = Patient
         fields = ['fio', 'phone', 'email', 'password']
         widgets = {
             'fio': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите ФИО'}),
@@ -35,13 +35,13 @@ class RegistrationForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if Patients.objects.filter(phone=phone).exists():
+        if Patient.objects.filter(phone=phone).exists():
             raise ValidationError('Пользователь с таким номером телефона уже существует.')
         return phone
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Patients.objects.filter(email=email).exists():
+        if Patient.objects.filter(email=email).exists():
             raise ValidationError('Пользователь с таким email уже существует.')
         return email
 

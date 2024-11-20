@@ -15,13 +15,13 @@
         <div class="profile-header">
             <div class="profile-info">
                 <div class="profile-img">
-                    <!-- Проверяем, есть ли изображение, если нет, показываем изображение по умолчанию -->
-                    <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'images/default-profile.jpg' %}{% endif %}" alt="Profile Picture">
+                    <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Profile Picture">
                 </div>
                 <div class="profile-details">
                     <h2>{{ patient.fio }}</h2>
                     <p>{{ patient.email }}</p>
                     <button class="edit-profile-btn">Редактировать профиль</button>
+                    <button class="edit-profile-btn" onclick="window.location.href='{% url 'logout' %}'">Выйти</button>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
             <div class="appointment-card">
                 <div class="doctor-info">
                     <div class="doctor-img">
-                        <img src="{% if appointment.doctor.image %}{{ appointment.doctor.image.url }}{% else %}{% static 'images/default-doctor.jpg' %}{% endif %}" alt="Doctor Image">
+                        <img src="{% if appointment.doctor.image %}{{ appointment.doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Doctor Image">
                     </div>
                     <div class="doctor-details">
                         <p><strong>{{ appointment.doctor.fio }}</strong></p>
@@ -51,7 +51,7 @@
                     <span>
                         <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
                     </span>
-                    <p>г. Челябинск, ул. Русакова, 16<br>кб. 240</p>
+                    <p>{{ appointment.adress}}</p>
                 </div>
             </div>
             {% empty %}

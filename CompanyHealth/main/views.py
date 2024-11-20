@@ -10,13 +10,13 @@ def login_view(request):
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
             try:
-                patient = Patients.objects.get(phone=phone)
+                patient = Patient.objects.get(phone=phone)
                 if patient.check_password(password):
                     request.session['patient_id'] = patient.id
                     return redirect('profile')
                 else:
                     messages.error(request, 'Неверный пароль.')
-            except Patients.DoesNotExist:
+            except Patient.DoesNotExist:
                 messages.error(request, 'Пользователь с таким номером не найден.')
     else:
         form = LoginForm()
@@ -28,12 +28,10 @@ def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            # Создание нового пользователя
             patient = form.save(commit=False)
-            patient.set_password(form.cleaned_data['password'])  # Хэширование пароля
+            patient.set_password(form.cleaned_data['password'])
             patient.save()
-            messages.success(request, 'Регистрация прошла успешно. Теперь вы можете войти.')
-            return redirect('login')  # Перенаправление на страницу входа
+            return redirect('login')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
@@ -41,26 +39,38 @@ def register_view(request):
 
     return render(request, 'main/register.html', {'form': form})
 
+
 def home(request):
-    records = Records.objects.all()
-    return render(request, 'main/index.html', {'records': records})
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+
+    records = Record.objects.all()
+    return render(request, 'main/index.html', {
+        'records': records,
+        'patient': patient,
+    })
 
 
 def profile_view(request):
-    # Получаем текущего пациента, например, по ID из сессии
-    patient_id = request.session.get('patient_id')  # предполагаем, что id пациента сохранено в сессии
+    patient_id = request.session.get('patient_id')
     if patient_id:
-        # Получаем пациента
-        patient = Patients.objects.get(id=patient_id)
-
-        # Получаем все записи пациента на прием
-        appointments = Appointments.objects.filter(patient=patient)
+        patient = Patient.objects.get(id=patient_id)
+        appointments = Appointment.objects.filter(patient=patient)
     else:
         patient = None
         appointments = []
 
-    # Отправляем данные в шаблон
     return render(request, 'main/profile.html', {
         'patient': patient,
         'appointments': appointments
     })
+
+def logout_view(request):
+    if 'patient_id' in request.session:
+        del request.session['patient_id']
+    return redirect('index')

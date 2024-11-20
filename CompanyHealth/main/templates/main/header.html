@@ -1,18 +1,33 @@
 {% load static %}
 <header>
-    <div class="logo">
-        <div class="text-logo">
-            <h1>КомпанияЗдоровья</h1>
+    <a href="{% url 'index' %}">
+        <div class="logo">
+            <div class="text-logo">
+                <h1>КомпанияЗдоровья</h1>
+            </div>
+            <img src="{% static 'img/logo.png' %}" alt="logo site">
         </div>
-        <img src="{% static 'img/logo.png' %}" alt="logo site">
-    </div>
+    </a>
     <div class="left-item">
         <div class="city-index">
             <span>г. Челябинск</span>
         </div>
+
+        {% if patient %}
+        <!-- Если пользователь авторизован -->
+        <a href="{% url 'profile' %}">
+            <div class="profile">
+                <p>{{ patient.fio }}</p>
+                <img height="45px" width="45px"
+                     src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
+                     alt="image-profile">
+            </div>
+        </a>
+        {% else %}
+        <!-- Если пользователь не авторизован -->
         <a href="{% url 'login' %}">
             <button>Личный кабинет</button>
         </a>
+        {% endif %}
     </div>
-
 </header>
