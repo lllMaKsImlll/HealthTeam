@@ -74,3 +74,6 @@ def logout_view(request):
     if 'patient_id' in request.session:
         del request.session['patient_id']
     return redirect('index')
+
+def appointments_view(request):
+    return render('main/appointments.html')
