@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
+from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.method == 'POST':
@@ -77,24 +78,29 @@ def logout_view(request):
 
 
 def appointments_view(request):
-    search_results = []
+    search_results = None  # Результаты поиска
     profession = ''
-    district = ''
+    area = ''
 
-    if request.method == 'POST':
+    if request.method == "POST":
+        # Получаем данные из формы.
         profession = request.POST.get('profession', '').strip()
-        district = request.POST.get('district', '').strip()
+        area = request.POST.get('district', '').strip()
 
-        # Поиск по таблице Doctor
-        search_results = Doctor.objects.filter(
-            profession__icontains=profession,
-            adress__icontains=district
-        )
+        # Выполняем поиск по специальности и району, если они указаны.
+        query = Doctor.objects.all()
+        if profession:
+            query = query.filter(profession__icontains=profession)
+        if area:
+            query = query.filter(area__icontains=area)
+
+        # Результаты поиска.
+        search_results = query
 
     return render(request, 'main/appointments.html', {
-        'profession': profession,
-        'district': district,
         'search_results': search_results,
+        'profession': profession,  # Передаём введённую специальность
+        'district': area,  # Передаём введённый район
     })
 
 def contacts_view(request):
@@ -105,3 +111,9 @@ def aboutUs_view(request):
 
 def ourServices_view(request):
     return render(request, 'main/ourServices.html')
+
+def news_view(request):
+    return render(request, 'main/news.html')
+
+def questions_view(request):
+    return render(request, 'main/questions.html')

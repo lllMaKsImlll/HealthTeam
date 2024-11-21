@@ -15,7 +15,7 @@
             <div class="image-subheader">
                 <img src="{% static '/img/doctors.png' %}" alt="img-subheader">
             </div>
-            <form method="post" action="{% url 'appointments' %}">
+            <form method="get" action="{% url 'appointments' %}">
                 {% csrf_token %}
                 <h1>Запись ко врачу онлайн</h1>
                 <div class="item-form">
