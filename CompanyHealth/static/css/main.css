@@ -64,28 +64,32 @@ header button {
 footer {
     background-color: #63C1AF;
     height: 190px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
     padding: 20px;
 }
 
-footer .footer-menu {
-    text-align: center;
-}
-
-footer .footer-menu ul {
-    list-style-type: none;
-    line-height: 1.5rem;
-}
-
-footer .footer-menu h3 {
-    font-weight: 200;
-    font-size: 32px;
+footer .main-block-footer {
+    display: flex;
+    justify-content: space-between;
 }
 
 footer .socials {
     margin-left: 20px;
+}
+
+footer .footer-menu {
+    text-align: left;
+    width: 150px;
+}
+
+footer .footer-menu ul {
+    list-style-type: none;
+    line-height: 1.3rem;
+}
+
+footer .copyright {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 200;
 }
 
 /* Главная часть */
