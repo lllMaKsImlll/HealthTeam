@@ -173,3 +173,5 @@ def questions_view(request):
     return render(request, 'main/questions.html', {
         'patient': patient,
     })
+
+# Hello world
