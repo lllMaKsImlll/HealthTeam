@@ -78,6 +78,14 @@ def logout_view(request):
 
 
 def appointments_view(request):
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+
     search_results = None  # Результаты поиска
     profession = ''
     area = ''
@@ -94,27 +102,74 @@ def appointments_view(request):
         if area:
             query = query.filter(area__icontains=area)
 
-        # Результаты поиска.
-        search_results = query
+        # Если запрос ничего не нашел, передаём пустой список.
+        search_results = query if query.exists() else []
 
     return render(request, 'main/appointments.html', {
         'search_results': search_results,
         'profession': profession,  # Передаём введённую специальность
         'district': area,  # Передаём введённый район
+        'patient': patient,
     })
 
 def contacts_view(request):
-    return render(request, 'main/contacts.html')
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+
+    return render(request, 'main/contacts.html', {
+        'patient': patient,
+    })
 
 def aboutUs_view(request):
-    return render(request, 'main/aboutUs.html')
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+    return render(request, 'main/aboutUs.html',{
+        'patient': patient,
+    })
 
 def ourServices_view(request):
-    return render(request, 'main/ourServices.html')
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+    return render(request, 'main/ourServices.html', {
+        'patient': patient,
+    })
 
 def news_view(request):
-    return render(request, 'main/news.html')
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+    return render(request, 'main/news.html', {
+        'patient': patient,
+    })
 
 
 def questions_view(request):
-    return render(request, 'main/questions.html')
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+    return render(request, 'main/questions.html', {
+        'patient': patient,
+    })
