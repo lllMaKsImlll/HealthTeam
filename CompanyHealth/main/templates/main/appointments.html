@@ -12,21 +12,21 @@
     <main>
 
         <div class="sub-header">
-            <img src="img/icon1.png" alt="picture 1">
-            <img src="img/icon3.png" alt="picture 2">
+            <img src="{% static '/img/icon1.png' %}" alt="picture 1">
+            <img src="{% static '/img/icon3.png' %}" alt="picture 2">
             <form action="#">
                 <input type="text" placeholder="Специальность">
                 <input type="text" placeholder="Район">
                 <button id="record-button">Поиск</button>
             </form>
-            <img src="img/icon4.png" alt="picture 3">
-            <img src="img/icon2.png" alt="picture 4">
+            <img src="{% static '/img/icon4.png' %}" alt="picture 3">
+            <img src="{% static '/img/icon2.png' %}" alt="picture 4">
         </div>
 
         <div class="result-search">
             <h1>Результат поиска</h1>
             <div class="one-post-search">
-                <img src="img/image-search.png" alt="img-search">
+                <img src="{% static '/img/image-search.png' %}" alt="img-search">
                 <div class="information-search">
                     <h1>Иванов Иван Иванович</h1>
                     <p>Специальность</p>
