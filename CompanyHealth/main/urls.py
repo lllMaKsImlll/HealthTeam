@@ -15,3 +15,5 @@ urlpatterns = [
     path('news/', views.news_view, name='news'),
     path('questions/', views.questions_view, name='questions'),
 ]
+
+# hello world
