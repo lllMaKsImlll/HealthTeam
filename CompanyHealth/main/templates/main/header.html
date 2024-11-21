@@ -12,7 +12,7 @@
         <div class="city-index">
             <span>г. Челябинск</span>
         </div>
-
+        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register' %}
         {% if patient %}
         <!-- Если пользователь авторизован -->
         <a href="{% url 'profile' %}">
@@ -28,6 +28,7 @@
         <a href="{% url 'login' %}">
             <button>Личный кабинет</button>
         </a>
+        {% endif %}
         {% endif %}
     </div>
 </header>
