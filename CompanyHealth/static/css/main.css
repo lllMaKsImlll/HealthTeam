@@ -95,7 +95,7 @@ footer .copyright {
     font-weight: 200;
 }
 
-footer a:hover {
+footer ul a:hover {
     color: white;
 }
 
@@ -364,6 +364,18 @@ main .one-post-search {
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+
+header .profile img {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.5);
+}
+
+header .profile p:hover {
+    color: #D74848;
 }
 
 
