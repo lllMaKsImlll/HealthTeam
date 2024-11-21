@@ -115,5 +115,6 @@ def ourServices_view(request):
 def news_view(request):
     return render(request, 'main/news.html')
 
+
 def questions_view(request):
     return render(request, 'main/questions.html')
