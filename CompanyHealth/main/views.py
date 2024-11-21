@@ -76,4 +76,7 @@ def logout_view(request):
     return redirect('index')
 
 def appointments_view(request):
-    return render('main/appointments.html')
+    return render(request, 'main/appointments.html')
+
+def aboutUs_view(request):
+    return render(request, 'main/aboutUs.html')
