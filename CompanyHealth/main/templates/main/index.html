@@ -15,17 +15,18 @@
             <div class="image-subheader">
                 <img src="{% static '/img/doctors.png' %}" alt="img-subheader">
             </div>
-            <form action="submit">
+            <form method="post" action="{% url 'appointments' %}">
+                {% csrf_token %}
                 <h1>Запись ко врачу онлайн</h1>
                 <div class="item-form">
                     <img src="{% static '/img/profession.png' %}" alt="#">
-                    <input type="text" placeholder="Специальность врача">
+                    <input type="text" name="profession" placeholder="Специальность врача" required>
                 </div>
                 <div class="item-form">
                     <img src="{% static '/img/district.png' %}" alt="#">
-                    <input type="text" placeholder="Район">
+                    <input type="text" name="district" placeholder="Район" required>
                 </div>
-                <button>Найти</button>
+                <button type="submit">Найти</button>
             </form>
         </div>
 

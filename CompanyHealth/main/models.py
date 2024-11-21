@@ -30,6 +30,8 @@ class Doctor(models.Model):
     email = models.CharField('Почта', max_length=100)
     profession = models.CharField('Специальность', max_length=65)
     experience = models.IntegerField('Стаж')
+    room = models.CharField('Кабинет', max_length=50)
+    area = models.CharField('Район работы', max_length=100)
     adress = models.CharField('Адрес кабинета', max_length=120)
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
     password = models.CharField('Пароль', max_length=120)

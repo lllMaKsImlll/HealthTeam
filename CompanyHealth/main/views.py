@@ -75,8 +75,27 @@ def logout_view(request):
         del request.session['patient_id']
     return redirect('index')
 
+
 def appointments_view(request):
-    return render(request, 'main/appointments.html')
+    search_results = []
+    profession = ''
+    district = ''
+
+    if request.method == 'POST':
+        profession = request.POST.get('profession', '').strip()
+        district = request.POST.get('district', '').strip()
+
+        # Поиск по таблице Doctor
+        search_results = Doctor.objects.filter(
+            profession__icontains=profession,
+            adress__icontains=district
+        )
+
+    return render(request, 'main/appointments.html', {
+        'profession': profession,
+        'district': district,
+        'search_results': search_results,
+    })
 
 def contacts_view(request):
     return render(request, 'main/contacts.html')

@@ -14,10 +14,11 @@
         <div class="sub-header">
             <img src="{% static '/img/icon1.png' %}" alt="picture 1">
             <img src="{% static '/img/icon3.png' %}" alt="picture 2">
-            <form action="#">
-                <input type="text" placeholder="Специальность">
-                <input type="text" placeholder="Район">
-                <button id="record-button">Поиск</button>
+            <form action="{% url 'appointments' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="profession" value="{{ profession }}" placeholder="Специальность">
+                <input type="text" name="district" value="{{ district }}" placeholder="Район">
+                <button id="record-button" type="submit">Поиск</button>
             </form>
             <img src="{% static '/img/icon4.png' %}" alt="picture 3">
             <img src="{% static '/img/icon2.png' %}" alt="picture 4">
@@ -25,21 +26,27 @@
 
         <div class="result-search">
             <h1>Результат поиска</h1>
-            <div class="one-post-search">
-                <img src="{% static '/img/image-search.png' %}" alt="img-search">
-                <div class="information-search">
-                    <h1>Иванов Иван Иванович</h1>
-                    <p>Специальность</p>
-                    <p>Стаж 10 лет</p>
-                    <h3>+7 (800) 555 35 35</h3>
-                </div>
-                <div class="other">
-                    <a href="authorization.html">
-                        <button class="search-button">Записаться</button>
-                    </a>
-                    <p>г. Челябинск, улица Гагарина, 18к4</p>
-                </div>
-            </div>
+            {% if search_results %}
+                {% for doctor in search_results %}
+                    <div class="one-post-search">
+                        <img src="{{ doctor.image.url }}" alt="img-search">
+                        <div class="information-search">
+                            <h1>{{ doctor.fio }}</h1>
+                            <p>{{ doctor.profession }}</p>
+                            <p>Стаж {{ doctor.experience }} лет</p>
+                            <h3>{{ doctor.phone }}</h3>
+                        </div>
+                        <div class="other">
+                            <a href="{% url 'authorization' %}">
+                                <button class="search-button">Записаться</button>
+                            </a>
+                            <p>{{ doctor.adress }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>По вашему запросу ничего не найдено.</p>
+            {% endif %}
         </div>
 
     </main>
