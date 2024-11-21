@@ -456,3 +456,28 @@ main .one-post-search {
     object-fit: cover;
     border-radius: 40px;
 }
+
+/* Страница: О нас*/
+.conteiner {
+    max-width: 1460px;
+    height: auto;
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+    padding: 40px;
+    margin: 50px auto;
+    background-color: white;
+}
+
+.conteiner h1 {
+    text-align: left;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.conteiner .text-block p {
+    text-align: left;
+}
