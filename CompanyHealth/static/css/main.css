@@ -91,9 +91,15 @@ footer .copyright {
     font-weight: 200;
 }
 
+footer a:hover {
+    color: white;
+}
+
 /* Главная часть */
 main {
     background-color: #F2F2F2;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .sub-header {
@@ -368,7 +374,7 @@ main .one-post-search {
     justify-content: center;
     border-radius: 40px;
     padding: 40px;
-    margin: 50px auto;
+    margin: 0px auto;
     background-color: white;
 }
 
@@ -458,26 +464,25 @@ main .one-post-search {
 }
 
 /* Страница: О нас*/
-.conteiner {
+.conteiner-about-us {
     max-width: 1460px;
     height: auto;
     box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     border-radius: 40px;
     padding: 40px;
-    margin: 50px auto;
+    margin: 0px auto;
     background-color: white;
+    gap: 20px;
 }
 
-.conteiner h1 {
+.conteiner-about-us h1 {
     text-align: left;
     font-size: 50px;
     font-weight: bold;
 }
 
-.conteiner .text-block p {
+.conteiner-about-us .text-block p {
     text-align: left;
 }
