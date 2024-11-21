@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <title>Контакты</title>
+</head>
+<body>
+  {% include 'main/header.html' %}
+  <main>
+    <div class="conteiner-about-us">
+      <h1>Наши контакты</h1>
+      <div class="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2279.3721403091663!2d61.367217842624505!3d55.159265078115865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x43c592c7609f1541%3A0xa6323404282e1672!2z0K7QttC90L4t0KPRgNCw0LvRjNGB0LrQuNC5INCz0L7RgdGD0LTQsNGA0YHRgtCy0LXQvdC90YvQuSDRg9C90LjQstC10YDRgdC40YLQtdGC!5e0!3m2!1sru!2sru!4v1732184799645!5m2!1sru!2sru" width="1500" height="500" style="border:0; border-radius: 40px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="text-block">
+        <p>
+          Телефон горячей линии:<br>
+                +7 (800) 123-45-67 (бесплатно по РФ)<br>
+                +7 (495) 123-45-67 (для Москвы и МО)<br>
+          Часы работы: с 8:00 до 20:00, без выходных<br>
+          Электронная почта: support@mysite.ru<br>
+          Предложения и сотрудничество: partners@mysite.ru<br>
+          Адрес офиса:<br>
+
+          г. Москва, ул. Примерная, д. 10, офис 45<br>
+          Часы работы: Пн-Пт с 9:00 до 18:00
+        </p>
+      </div>
+    </div>
+  </main>
+  {% include 'main/footer.html' %}
+</body>
+</html>

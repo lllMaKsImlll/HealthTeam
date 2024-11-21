@@ -78,5 +78,11 @@ def logout_view(request):
 def appointments_view(request):
     return render(request, 'main/appointments.html')
 
+def contacts_view(request):
+    return render(request, 'main/contacts.html')
+
 def aboutUs_view(request):
     return render(request, 'main/aboutUs.html')
+
+def ourServices_view(request):
+    return render(request, 'main/ourServices.html')
