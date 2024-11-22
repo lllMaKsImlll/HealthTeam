@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
-from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.method == 'POST':
@@ -50,6 +49,7 @@ def home(request):
         except Patient.DoesNotExist:
             patient = None
 
+    records = Record.objects.all()
     records = Record.objects.all()
     return render(request, 'main/index.html', {
         'records': records,
@@ -150,6 +150,7 @@ def ourServices_view(request):
     })
 
 def news_view(request):
+    news_list = News.objects.all().order_by('-date')
     patient_id = request.session.get('patient_id')
     patient = None
     if patient_id:
@@ -159,6 +160,7 @@ def news_view(request):
             patient = None
     return render(request, 'main/news.html', {
         'patient': patient,
+        'news_list': news_list
     })
 
 

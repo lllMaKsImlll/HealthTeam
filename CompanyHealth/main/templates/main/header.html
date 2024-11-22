@@ -12,7 +12,7 @@
         <div class="city-index">
             <span>г. Челябинск</span>
         </div>
-        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register'  and request.resolver_match.view_name != 'profile'%}
+        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register'  and request.resolver_match.view_name != 'profile' and request.resolver_match.view_name != 'editProfile'%}
         {% if patient %}
         <!-- Если пользователь авторизован -->
         <a href="{% url 'profile' %}">

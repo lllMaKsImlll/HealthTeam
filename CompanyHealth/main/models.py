@@ -68,3 +68,11 @@ class Record(models.Model):
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
     def __str__(self):
         return f"{self.name} {self.date}"
+
+class News(models.Model):
+    title = models.CharField('Заголовок', max_length=60)
+    text = models.TextField('Описание новости')
+    date = models.CharField('Дата выпуска новости', max_length=30)
+
+    def __str__(self):
+        return f" новость {self.title} от {self.date}"

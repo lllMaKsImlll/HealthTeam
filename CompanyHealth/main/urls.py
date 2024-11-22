@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 
@@ -16,5 +15,3 @@ urlpatterns = [
     path('questions/', views.questions_view, name='questions'),
     path('editProfile/', views.editProfile_view, name='editProfile'),
 ]
-
-# hello world
