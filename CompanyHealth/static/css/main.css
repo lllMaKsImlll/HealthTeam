@@ -15,7 +15,8 @@ a {
     color: black;
 }
 
-button:hover {
+button:hover,
+.button-input:hover {
     cursor: pointer;
     transform: scale(1.01);
 }
@@ -95,7 +96,7 @@ footer .copyright {
     font-weight: 200;
 }
 
-footer a:hover {
+footer ul a:hover {
     color: white;
 }
 
@@ -359,13 +360,25 @@ main .one-post-search {
 }
 
 /* Заголовок: профиль */
-.profile {
+header .profile {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
+header .profile img {
+    width: 45px;
+    height: 45px;
+    border: 2px solid black;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.5);
+}
+
+header .profile p:hover{
+    color: #D74848;
+}
 
 /* Страница: Услуги */
 .conteiner {

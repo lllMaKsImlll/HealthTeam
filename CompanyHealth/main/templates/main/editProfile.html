@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  {% load static %}
+  <link rel="stylesheet" href="{% static '/css/main.css' %}">
+  <link rel="stylesheet" href="{% static '/css/editProfile.css' %}">
+  <title>Редактирование профиля</title>
+</head>
+<body>
+  {% include 'main/header.html' %}
+  <main>
+    <div class="container-edit">
+      <div class="form-edit">
+        <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Picture profile">
+        <button>Загрузить изображение</button>
+        <input type="text" placeholder="ФИО">
+        <input type="text" placeholder="Почта">
+        <input type="text" placeholder="Телефон">
+        <input type="text" placeholder="Старый пароль">
+        <input type="text" placeholder="Новый пароль">
+        <input type="text" placeholder="Повторить новый пароль">
+        <button>Сохранить изменения</button>
+      </div>
+    </div>
+  </main>
+  {% include 'main/footer.html' %}
+</body>
+</html>

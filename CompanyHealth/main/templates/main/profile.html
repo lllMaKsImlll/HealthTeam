@@ -20,7 +20,9 @@
                 <div class="profile-details">
                     <h2>{{ patient.fio }}</h2>
                     <p>{{ patient.email }}</p>
-                    <button class="edit-profile-btn">Редактировать профиль</button>
+                    <a href="{% url 'editProfile' %}">
+                        <button class="edit-profile-btn">Редактировать профиль</button>
+                    </a>
                     <button class="edit-profile-btn exit-button" onclick="window.location.href='{% url 'logout' %}'">Выйти</button>
                 </div>
             </div>

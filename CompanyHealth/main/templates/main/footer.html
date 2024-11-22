@@ -2,10 +2,12 @@
 <footer>
     <div class="main-block-footer">
         <div class="footer-logo">
-            <div class="logo">
-                <h1>КомпанияЗдоровья</h1>
-                <img src="{% static 'img/logo-black.png' %}" alt="logo site">
-            </div>
+            <a href="{% url 'index' %}">
+                <div class="logo">
+                    <h1>КомпанияЗдоровья</h1>
+                    <img src="{% static 'img/logo-black.png' %}" alt="logo site">
+                </div>
+            </a>
             <div class="socials">
                 <img src="{% static 'img/vk.png' %}" alt="vk">
                 <img src="{% static 'img/dzen.png' %}" alt="dzen">

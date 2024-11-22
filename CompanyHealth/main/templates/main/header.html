@@ -18,8 +18,7 @@
         <a href="{% url 'profile' %}">
             <div class="profile">
                 <p>{{ patient.fio }}</p>
-                <img height="45px" width="45px"
-                     src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
+                <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
                      alt="image-profile">
             </div>
         </a>

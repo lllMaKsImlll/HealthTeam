@@ -14,6 +14,7 @@ urlpatterns = [
     path('aboutUs/', views.aboutUs_view, name='aboutUs'),
     path('news/', views.news_view, name='news'),
     path('questions/', views.questions_view, name='questions'),
+    path('editProfile/', views.editProfile_view, name='editProfile'),
 ]
 
 # hello world

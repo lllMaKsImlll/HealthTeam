@@ -42,7 +42,6 @@ def register_view(request):
 
 
 def home(request):
-    '''
     patient_id = request.session.get('patient_id')
     patient = None
     if patient_id:
@@ -50,11 +49,11 @@ def home(request):
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
-'''
-    #records = Record.objects.all()
+
+    records = Record.objects.all()
     return render(request, 'main/index.html', {
-        #'records': records,
-        #'patient': patient,
+        'records': records,
+        'patient': patient,
     })
 
 
@@ -175,4 +174,14 @@ def questions_view(request):
         'patient': patient,
     })
 
-# Hello world 123
+def editProfile_view(request):
+    patient_id = request.session.get('patient_id')
+    patient = None
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+    return render(request, 'main/editProfile.html', {
+        'patient': patient,
+    })
