@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Записаться на прием</title>
+</head>
+<body>
+    <h1>Запись на прием к врачу {{ doctor.fio }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="appointment_date">Дата и время приема:</label>
+        <input type="datetime-local" id="appointment_date" name="appointment_date" required>
+
+        <label for="description">Описание проблемы:</label>
+        <textarea id="description" name="description"></textarea>
+
+        <button type="submit">Записаться</button>
+    </form>
+</body>
+</html>

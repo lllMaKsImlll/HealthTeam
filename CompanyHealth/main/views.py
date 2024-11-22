@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
+from django.utils import timezone
 
 def login_view(request):
     if request.method == 'POST':
@@ -57,14 +59,18 @@ def home(request):
     })
 
 
+@login_required
 def profile_view(request):
+    # Получаем идентификатор пациента из сессии
     patient_id = request.session.get('patient_id')
-    if patient_id:
-        patient = Patient.objects.get(id=patient_id)
-        appointments = Appointment.objects.filter(patient=patient)
-    else:
-        patient = None
-        appointments = []
+    if not patient_id:
+        return render(request, 'main/profile.html', {'error': 'Пациент не найден.'})
+
+    # Получаем пациента по ID
+    patient = get_object_or_404(Patient, id=patient_id)
+
+    # Получаем все записи на прием для пациента
+    appointments = Appointment.objects.filter(patient=patient)
 
     return render(request, 'main/profile.html', {
         'patient': patient,
@@ -187,3 +193,42 @@ def editProfile_view(request):
     return render(request, 'main/editProfile.html', {
         'patient': patient,
     })
+
+def make_appointment(request, doctor_id):
+    patient_id = request.session.get('patient_id')
+    if not patient_id:
+        return redirect('login')
+
+    patient = get_object_or_404(Patient, id=patient_id)
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+
+    if request.method == 'POST':
+        appointment_date = request.POST.get('appointment_date')
+
+        if appointment_date:
+            try:
+                appointment_date = timezone.datetime.strptime(appointment_date,"%Y-%m-%dT%H:%M")  # Обратите внимание на формат
+            except ValueError:
+                return render(request, 'main/make_appointment.html', {
+                    'doctor': doctor,
+                    'error': 'Неверный формат даты и времени.'
+                })
+
+            appointment_description = request.POST.get('description', '')
+
+            appointment = Appointment.objects.create(
+                patient=patient,
+                doctor=doctor,
+                date=appointment_date,
+                description=appointment_description
+            )
+
+            return redirect('profile')  # Перенаправляем на профиль после записи
+
+        else:
+            return render(request, 'main/make_appointment.html', {
+                'doctor': doctor,
+                'error': 'Дата и время приема не могут быть пустыми.'
+            })
+
+    return render(request, 'main/make_appointment.html', {'doctor': doctor})
