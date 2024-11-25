@@ -1,33 +1,21 @@
-.container {
-    width: 80%;
-    margin: 0 auto;
-}
-
-.profile-header {
+/* Профиль */
+.profileDoctor {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
-    background-color: #F3F3F3;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.25);
+    justify-content: space-around;
+    gap: 40px;
 }
 
-.profile-info {
-    display: flex;
-    align-items: center;
-}
-
-.profile-img {
+.profileDoctor .profile-img {
     width: 320px;
     height: 320px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 20px;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.25);
 }
 
-.profile-img img {
+.profileDoctor .profile-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -36,8 +24,7 @@
 .profile-details {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-left: 50px;
+    gap: 5px;
 }
 
 .profile-details {
@@ -45,42 +32,43 @@
 }
 
 .profile-details h2 {
-    margin-bottom: 10px;
+    font-size: 35px;
 }
 
-.edit-profile-btn {
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
+/* Фильтр */
 .filters {
     margin: 20px 0;
     display: flex;
     gap: 10px;
+    box-shadow: none !important;
+    background: none !important;
+    padding: 40px 5px !important;
 }
 
-.filters input, .filters button {
+.filters input, 
+.filters button {
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
+    font-size: 18px;
+    background-color: #ccc;
+    border: none;
     border-radius: 5px;
 }
 
-.appointments {
-    background-color: #F3F3F3;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
+/* Записи на прием */
 .appointments h3 {
     font-size: 35px;
+}
+
+.appointment-card-visited{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .appointment-card {
@@ -89,10 +77,76 @@
     justify-content: space-between;
     padding: 15px;
     border-bottom: 1px solid black;
+    font-style: italic;
+}
+
+.appointment-card h4 {
+    font-size: 30px;
 }
 
 .appointment-card:last-child {
     border-bottom: none;
+}
+
+.pacient-info {
+    display: flex;
+    align-items: center;
+}
+
+.pacient-img {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.25);
+}
+
+.pacient-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pacient-details {
+    font-size: 16px;
+    margin-left: 50px;
+}
+
+.appointment-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.appointment-info span{
+    font-weight: bold;
+    color:#63C1AF;
+}
+
+.appointment-info span p {
+    font-size: 30px;
+}
+
+/* Посещенные записи */
+.visited {
+    margin-top: 40px !important;
+}
+
+/* Общий стиль карточки */
+.card {
+    width: 100%;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 15px 10px;
+}
+    
+.card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .doctor-info {
@@ -100,37 +154,60 @@
     align-items: center;
 }
 
-.doctor-img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 15px;
-    box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
-}
-
-.doctor-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .doctor-details {
-    font-size: 16px;
-    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
 }
 
-.appointment-time {
+.doctor-details h4 {
+    font-size: 30px;
+    font-style: italic;
+}
+  
+.doctor-name {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
+    margin: 0;
+}
+  
+.doctor-specialty,
+.doctor-experience {
+    font-size: 14px;
+    color: #777;
+    margin: 2px 0;
+}
+  
+.appointment-info {
     text-align: right;
 }
-
-.appointment-time span{
-    text-align: center;
-    color:#63C1AF;
+  
+.appointment-date {
+    font-size: 14px;
+    color: #49b982;
+    font-weight: 500;
+    margin: 0;
 }
-
-.profile-details .exit-button {
-    background-color: #D74848;
+  
+.appointment-location {
+    font-size: 14px;
+    color: #777;
 }
+  
+.details-button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    background-color: #49b982;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+  
+.details-button:hover {
+    background-color: #3e9c72;
+}
+  

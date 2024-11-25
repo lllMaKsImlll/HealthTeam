@@ -1,0 +1,30 @@
+/* Страница: Контакты*/
+.contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contacts h1 {
+    text-align: left;
+    font-size: 50px;
+    font-weight:conteiner-contacts
+}
+
+.contacts span {
+    color: #63C1AF;
+    margin-left: 30px;
+}
+
+.contacts .text-block p {
+    text-align: left;
+    line-height: 1.3rem;
+}
+
+.contacts .map {
+    margin: 20px auto;
+}
+
+.contacts .map iframe{
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+}

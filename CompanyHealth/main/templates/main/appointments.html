@@ -14,7 +14,7 @@
         <div class="sub-header">
             <img src="{% static '/img/icon1.png' %}" alt="picture 1">
             <img src="{% static '/img/icon3.png' %}" alt="picture 2">
-            <form action="{% url 'appointments' %}" method="get">
+            <form action="{% url 'appointments' %}"  method="post">
                 {% csrf_token %}
                 <input type="text" name="profession" value="{{ profession }}" placeholder="Специальность">
                 <input type="text" name="district" value="{{ district }}" placeholder="Район">
@@ -29,7 +29,7 @@
             {% if search_results %}
                 {% for doctor in search_results %}
                     <div class="one-post-search">
-                        <img src="{{ doctor.image.url }}" alt="img-search">
+                        <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="img-search">
                         <div class="information-search">
                             <h1>{{ doctor.fio }}</h1>
                             <p>{{ doctor.profession }}</p>

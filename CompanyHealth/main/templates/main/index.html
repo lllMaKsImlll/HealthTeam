@@ -36,7 +36,7 @@
                     <h1>Настоящие отзывы клиентов</h1>
                     {% for record in records %}
                     <div class="record-block">
-                        <img src="{{ record.image.url }}" alt="record image">
+                        <img src="{% if record.image %}{{ record.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="record image">
                         <div class="record-content">
                             <div class="center">
                                 <p>"{{ record.record }}"</p>

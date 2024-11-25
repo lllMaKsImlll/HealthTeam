@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
 class Patient(models.Model):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient')
     fio = models.CharField('ФИО', max_length=100)
     phone = models.CharField('Номер телефона', max_length=11)
     email = models.CharField('Почта', max_length=100)
@@ -58,7 +57,9 @@ class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments', verbose_name='Пациент')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='appointments', verbose_name='Врач')
     date = models.DateTimeField('Дата и время приема')
-    description = models.TextField('Описание проблемы', blank=True)
+    description = models.TextField('Описание проблемы', blank=True, null=True)
+    recommendations = models.TextField('Рекомендации', blank=True, null=True)
+    visited = models.BooleanField('Посещенно', null=True)
 
     def __str__(self):
         return f"Прием {self.patient.fio} у {self.doctor.fio}"

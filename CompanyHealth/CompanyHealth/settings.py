@@ -71,6 +71,8 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_URL = '/login/'
+
 WSGI_APPLICATION = 'CompanyHealth.wsgi.application'
 
 

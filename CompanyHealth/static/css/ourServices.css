@@ -1,0 +1,82 @@
+/* Страница: Услуги */
+.services {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.services .block-item {
+    display: flex;
+    margin-top: 20px;
+}
+
+.services .block-item .block-text{
+    padding: 30px;
+    text-align: justify;
+    background-color: #63C1AF;
+    line-height: 1.35;
+}
+
+.services .block-item .block-text h2{
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.services .block-item .block-text ul span{
+    font-weight: bold;
+}
+
+
+
+.services .block-items .block-item:nth-child(odd) img{
+    border-radius: 40px 0 0 0;
+}
+
+.services .block-items .block-item:nth-child(odd) .block-text{
+    border-radius: 0 0 40px 0;
+}
+
+.services .block-items .block-item:nth-child(even) img{
+    border-radius: 0 40px 0 0;
+}
+
+.services .block-items .block-item:nth-child(even) .block-text{
+    border-radius: 0 0 0 40px;
+}
+
+
+
+.services .block-item img {
+    max-width: 700px;
+    height: 340px;
+}
+
+.services .block-how-it-work {
+    display: flex;
+    margin-top: 40px;
+    padding: 30px;
+    gap: 20px;
+}
+
+.services .block-how-it-work .block-text {
+    padding: 30px;
+}
+
+
+.services .block-how-it-work h1 {
+    font-size: 50px;
+}
+
+.services .block-how-it-work p {
+    text-align: justify;
+    line-height: 1.3;
+}
+
+.services .block-how-it-work .block-video img {
+    width: 700px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 40px;
+}

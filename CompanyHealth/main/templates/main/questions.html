@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     {% load static %}
     <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/questions.css' %}">
     <title>Вопросы</title>
 </head>
 <body>
     {% include 'main/header.html' %}
     <main>
-        <div class="conteiner-qustions">
+        <div class="container qustions">
             <h1>Частные вопросы</h1>
             <p>Мы собрали ответы на наиболее популярные вопросы. Если вы не нашли нужной информации, свяжитесь с нами через форму обратной связи.</p>
             <div class="block-items">
@@ -23,7 +24,7 @@
                 </div>
                 <div class="block-item">
                     <div class="question">
-                        <p>Как работает ваш сервис?</p>
+                        <p>С какими врачами вы сотрудничаете?</p>
                     </div>
                     <div class="answer">
                         <p>Мы помогаем находить врачей по специализации и району. Вы можете записаться на прием или вызвать врача на дом через наш сайт.</p>
@@ -31,10 +32,26 @@
                 </div>
                 <div class="block-item">
                     <div class="question">
-                        <p>Как работает ваш сервис?</p>
+                        <p>Как создать аккаунт?</p>
                     </div>
                     <div class="answer">
-                        <p>Мы помогаем находить врачей по специализации и району. Вы можете записаться на прием или вызвать врача на дом через наш сайт.</p>
+                        <p>Для создания аккаунта нажмите 'Регистрация', введите ваши данные и подтвердите их через электронную почту</p>
+                    </div>
+                </div>
+                <div class="block-item">
+                    <div class="question">
+                        <p>Как найти врача по специализации?</p>
+                    </div>
+                    <div class="answer">
+                        <p>На главной странице введите специальность врача и ваш район проживания, затем нажмите 'Найти'.</p>
+                    </div>
+                </div>
+                <div class="block-item">
+                    <div class="question">
+                        <p>Можно ли отменить запись?</p>
+                    </div>
+                    <div class="answer">
+                        <p>Да, вы можете отменить запись в личном кабинете не позднее чем за 24 часа до приема.</p>
                     </div>
                 </div>
             </div>

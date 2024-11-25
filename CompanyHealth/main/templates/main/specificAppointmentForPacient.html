@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/specificAppointment.css' %}">
+    <title>Подробности записи на прием</title>
+</head>
+<body>
+    <main>
+        <div class="block">
+            <div class="container specificAppointment">
+                <div class="profile-container-img" style="margin-top: -870px;">
+                    <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
+                </div>
+                <h1>{{ patient.fio }}</h1>
+                <p>{{ patient.email }}</p>
+                <p>{{ patient.phone }}</p>
+                <h2>Проблемы</h2>
+                <p class="text-block">{{ appointment.description }}</p>
+                <h2>Рекомендации</h2>
+                <p class="text-block">{{ appointment.recommendations }}</p>
+                <button class="good-button">Оставить рекомендацию</button>
+                <a href="javascript:history.back()">
+                    <button>Назад</button>
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

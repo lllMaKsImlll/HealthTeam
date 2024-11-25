@@ -1,33 +1,35 @@
-.container-edit {
-    max-width: 1460px;
-    height: auto;
-    box-shadow: 4px 4px 14px rgba(0,0,0,0.25);
-    border-radius: 40px;
-    padding: 40px;
-    margin: 0px auto;
-    background-color: white;
-    gap: 20px;
-}
-
-.container-edit .form-edit {
+.edit .form-edit {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
 }
 
-.container-edit input {
+.edit .form-edit input {
     background-color: #D7D7D7;
     padding: 10px 15px;
     color: black;
     border-radius: 30px;
+    border: none;
+    width: 400px;
 }
 
-.container-edit img {
+.edit .form-edit img {
     width: 320px;
     height: 320px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 20px;
     object-fit: cover;
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.5);
+}
+
+.edit button,
+.edit .button-upload {
+    padding: 10px 15px;
+    background-color: #63C1AF;
+    border: none;
+    width: auto;
+    border-radius: 30px;
+    color: white;
 }

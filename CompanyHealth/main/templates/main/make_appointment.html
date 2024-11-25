@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>Записаться на прием</title>
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/make_appointments.css' %}">
 </head>
 <body>
-    <h1>Запись на прием к врачу {{ doctor.fio }}</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-        <label for="appointment_date">Дата и время приема:</label>
-        <input type="datetime-local" id="appointment_date" name="appointment_date" required>
-
-        <label for="description">Описание проблемы:</label>
-        <textarea id="description" name="description"></textarea>
-
-        <button type="submit">Записаться</button>
-    </form>
+    <div class="block">
+        <div class="container-makeAppointments">
+            <div class="profile-container-img">
+                <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="doctor-img">
+            </div>
+            <h1>{{ doctor.fio }}</h1>
+            <h2>Данные для записи</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="datetime-local" id="appointment-date" name="appointment_date" placeholder="Дата и время приема">
+                <textarea id="description" name="description">Описание проблемы</textarea>
+                <button type="submit">Записаться</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

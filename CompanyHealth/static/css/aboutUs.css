@@ -1,0 +1,23 @@
+/* Страница: О нас*/
+.about-us {
+    display: flex;
+    flex-direction: column;
+}
+
+.about-us .block-item {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #64C1AE;
+}
+
+.about-us .block-item h2{
+    font-size: 50px;
+}
+
+.about-us .block-item:nth-child(odd) {
+    border-radius: 40px 0 40px 0;
+}
+
+.about-us .block-item:nth-child(even) {
+    border-radius: 0 40px 0 40px;
+}

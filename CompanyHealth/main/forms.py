@@ -5,12 +5,16 @@ from .models import *
 class LoginForm(forms.Form):
     phone = forms.CharField(
         max_length=11,
-        label=None,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите номер телефона'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите номер телефона'
+        })
     )
     password = forms.CharField(
-        label=None,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введите пароль'})
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите пароль'
+        })
     )
 
 class RegistrationForm(forms.ModelForm):

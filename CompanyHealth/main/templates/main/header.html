@@ -12,22 +12,28 @@
         <div class="city-index">
             <span>г. Челябинск</span>
         </div>
-        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register'  and request.resolver_match.view_name != 'profile' and request.resolver_match.view_name != 'editProfile'%}
-        {% if patient %}
-        <!-- Если пользователь авторизован -->
-        <a href="{% url 'profile' %}">
-            <div class="profile">
-                <p>{{ patient.fio }}</p>
-                <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
-                     alt="image-profile">
-            </div>
-        </a>
-        {% else %}
-        <!-- Если пользователь не авторизован -->
-        <a href="{% url 'login' %}">
-            <button>Личный кабинет</button>
-        </a>
-        {% endif %}
+        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register' and request.resolver_match.view_name != 'profile' and request.resolver_match.view_name != 'editProfile' %}
+            {% if patient %}
+                <a href="{% url 'profile' %}">
+                    <div class="profile">
+                        <p>{{ patient.fio }}</p>
+                        <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
+                             alt="image-profile">
+                    </div>
+                </a>
+            {% elif doctor %}
+                <a href="{% url 'profile' %}">
+                    <div class="profile">
+                        <p>{{ doctor.fio }}</p>
+                        <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}"
+                             alt="image-profile">
+                    </div>
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}">
+                    <button>Личный кабинет</button>
+                </a>
+            {% endif %}
         {% endif %}
     </div>
 </header>

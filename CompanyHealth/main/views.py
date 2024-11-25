@@ -5,26 +5,32 @@ from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
 from django.utils import timezone
 
+
 def login_view(request):
+    next_url = request.GET.get('next', 'profile')
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
-            try:
-                patient = Patient.objects.get(phone=phone)
-                if patient.check_password(password):
-                    request.session['patient_id'] = patient.id
-                    return redirect('profile')
-                else:
-                    messages.error(request, 'Неверный пароль.')
-            except Patient.DoesNotExist:
-                messages.error(request, 'Пользователь с таким номером не найден.')
+
+            patient = Patient.objects.filter(phone=phone).first()
+            if patient and patient.check_password(password):
+                request.session['user_type'] = 'patient'
+                request.session['patient_id'] = patient.id
+                return redirect(next_url)
+
+            doctor = Doctor.objects.filter(phone=phone).first()
+            if doctor and doctor.check_password(password):
+                request.session['user_type'] = 'doctor'
+                request.session['doctor_id'] = doctor.id
+                return redirect(next_url)
+
+            messages.error(request, 'Неверный номер телефона или пароль.')
     else:
         form = LoginForm()
 
     return render(request, 'main/auth.html', {'form': form})
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -43,153 +49,295 @@ def register_view(request):
 
 
 def home(request):
+    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
+    districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
+
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
 
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
     records = Record.objects.all()
-    records = Record.objects.all()
+
     return render(request, 'main/index.html', {
         'records': records,
         'patient': patient,
+        'doctor': doctor,  # Передаем данные доктора
+        'professions': professions,
+        'districts': districts
     })
 
 
 @login_required
 def profile_view(request):
-    # Получаем идентификатор пациента из сессии
-    patient_id = request.session.get('patient_id')
-    if not patient_id:
-        return render(request, 'main/profile.html', {'error': 'Пациент не найден.'})
+    user_type = request.session.get('user_type')
 
-    # Получаем пациента по ID
-    patient = get_object_or_404(Patient, id=patient_id)
+    if user_type == 'patient':
+        patient_id = request.session.get('patient_id')
+        if not patient_id:
+            return render(request, 'main/profilePacient.html', {'error': 'Пациент не найден.'})
 
-    # Получаем все записи на прием для пациента
-    appointments = Appointment.objects.filter(patient=patient)
+        patient = get_object_or_404(Patient, id=patient_id)
+        # Разделяем записи: предстоящие и посещенные
+        upcoming_appointments = Appointment.objects.filter(patient=patient, visited=False)
+        visited_appointments = Appointment.objects.filter(patient=patient, visited=True)
 
-    return render(request, 'main/profile.html', {
-        'patient': patient,
-        'appointments': appointments
-    })
+        return render(request, 'main/profilePacient.html', {
+            'patient': patient,
+            'upcoming_appointments': upcoming_appointments,
+            'visited_appointments': visited_appointments
+        })
+
+    elif user_type == 'doctor':
+        doctor_id = request.session.get('doctor_id')
+        if not doctor_id:
+            return render(request, 'main/profileDoctor.html', {'error': 'Доктор не найден.'})
+
+        doctor = get_object_or_404(Doctor, id=doctor_id)
+        appointments = Appointment.objects.filter(doctor=doctor)
+
+        return render(request, 'main/profileDoctor.html', {
+            'doctor': doctor,
+            'appointments': appointments
+        })
+
+    return redirect('login')
 
 def logout_view(request):
     if 'patient_id' in request.session:
         del request.session['patient_id']
+    if 'doctor_id' in request.session:
+        del request.session['doctor_id']
     return redirect('index')
 
 
 def appointments_view(request):
+    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
+    districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
 
-    search_results = None  # Результаты поиска
-    profession = ''
-    area = ''
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
 
-    if request.method == "POST":
-        # Получаем данные из формы.
-        profession = request.POST.get('profession', '').strip()
-        area = request.POST.get('district', '').strip()
+        search_results = None  # Результаты поиска
+        profession = ''
+        area = ''
 
-        # Выполняем поиск по специальности и району, если они указаны.
-        query = Doctor.objects.all()
-        if profession:
-            query = query.filter(profession__icontains=profession)
-        if area:
-            query = query.filter(area__icontains=area)
+        if request.method == "POST":
+            # Получаем данные из формы.
+            profession = request.POST.get('profession', '').strip()
+            area = request.POST.get('district', '').strip()
 
-        # Если запрос ничего не нашел, передаём пустой список.
-        search_results = query if query.exists() else []
+            # Выполняем поиск по специальности и району, если они указаны.
+            query = Doctor.objects.all()
+            if profession:
+                query = query.filter(profession__icontains=profession)
+            if area:
+                query = query.filter(area__icontains=area)
 
-    return render(request, 'main/appointments.html', {
-        'search_results': search_results,
-        'profession': profession,  # Передаём введённую специальность
-        'district': area,  # Передаём введённый район
-        'patient': patient,
-    })
+            # Если запрос ничего не нашел, передаём пустой список.
+            search_results = query if query.exists() else []
+
+        return render(request, 'main/appointments.html', {
+            'search_results': search_results,
+            'profession': profession,  # Передаём введённую специальность
+            'district': area,  # Передаём введённый район
+            'patient': patient,
+            'professions': professions,
+            'districts': districts
+        })
 
 def contacts_view(request):
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
 
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
     return render(request, 'main/contacts.html', {
         'patient': patient,
+        'doctor': doctor,
     })
 
 def aboutUs_view(request):
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
+
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
+
     return render(request, 'main/aboutUs.html',{
         'patient': patient,
+        'doctor': doctor,
     })
 
 def ourServices_view(request):
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
+
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
     return render(request, 'main/ourServices.html', {
         'patient': patient,
+        'doctor': doctor,
     })
 
 def news_view(request):
     news_list = News.objects.all().order_by('-date')
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
+
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
+
     return render(request, 'main/news.html', {
         'patient': patient,
+        'doctor': doctor,
         'news_list': news_list
     })
 
 
 def questions_view(request):
     patient_id = request.session.get('patient_id')
+    doctor_id = request.session.get('doctor_id')
+
     patient = None
+    doctor = None
+
     if patient_id:
         try:
             patient = Patient.objects.get(id=patient_id)
         except Patient.DoesNotExist:
             patient = None
+
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
     return render(request, 'main/questions.html', {
         'patient': patient,
+        'doctor': doctor,
     })
+
 
 def editProfile_view(request):
     patient_id = request.session.get('patient_id')
-    patient = None
-    if patient_id:
-        try:
-            patient = Patient.objects.get(id=patient_id)
-        except Patient.DoesNotExist:
-            patient = None
+    if not patient_id:
+        return redirect('login')
+
+    patient = get_object_or_404(Patient, id=patient_id)
+
+    if request.method == 'POST':
+        fio = request.POST.get('fio')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        image = request.FILES.get('image')
+
+        if fio:
+            patient.fio = fio
+        if email:
+            patient.email = email
+        if phone:
+            patient.phone = phone
+        if image:
+            patient.image = image
+
+        if old_password and new_password and confirm_password:
+            if new_password != confirm_password:
+                messages.error(request, "Новые пароли не совпадают.")
+            elif not patient.user.check_password(old_password):
+                messages.error(request, "Старый пароль указан неверно.")
+            else:
+                patient.user.set_password(new_password)
+                patient.user.save()
+                messages.success(request, "Пароль успешно изменен.")
+
+        patient.save()
+        messages.success(request, "Данные профиля успешно обновлены.")
+        return redirect('profile')
+
     return render(request, 'main/editProfile.html', {
         'patient': patient,
     })
@@ -223,7 +371,7 @@ def make_appointment(request, doctor_id):
                 description=appointment_description
             )
 
-            return redirect('profile')  # Перенаправляем на профиль после записи
+            return redirect('profile')
 
         else:
             return render(request, 'main/make_appointment.html', {
@@ -232,3 +380,46 @@ def make_appointment(request, doctor_id):
             })
 
     return render(request, 'main/make_appointment.html', {'doctor': doctor})
+
+
+@login_required
+def cancel_appointment(request):
+    if request.method == 'POST':
+        appointment_id = request.POST.get('appointment_id')
+
+        appointment = get_object_or_404(Appointment, id=appointment_id)
+
+        if appointment.patient.id != request.session.get('patient_id'):
+            return redirect('profile')
+
+        appointment.delete()
+        return redirect('profile')
+
+    messages.error(request, 'Неверный метод запроса.')
+    return redirect('profile')
+
+
+def specific_appointment_for_patient(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    patient = appointment.patient
+    doctor = appointment.doctor
+
+    return render(request, 'main/specificAppointmentForPacient.html', {
+        'appointment': appointment,
+        'patient': patient,
+        'doctor': doctor
+    })
+
+
+def specific_appointment_for_doctor(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    patient = appointment.patient
+    doctor = appointment.doctor
+
+    return render(request, 'main/specificAppointmentForDoctor.html', {
+        'appointment': appointment,
+        'patient': patient,
+        'doctor': doctor
+    })

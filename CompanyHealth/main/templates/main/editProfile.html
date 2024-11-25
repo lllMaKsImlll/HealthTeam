@@ -10,18 +10,32 @@
 <body>
   {% include 'main/header.html' %}
   <main>
-    <div class="container-edit">
+    <div class="container edit">
       <div class="form-edit">
-        <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Picture profile">
-        <button>Загрузить изображение</button>
-        <input type="text" placeholder="ФИО">
-        <input type="text" placeholder="Почта">
-        <input type="text" placeholder="Телефон">
-        <input type="text" placeholder="Старый пароль">
-        <input type="text" placeholder="Новый пароль">
-        <input type="text" placeholder="Повторить новый пароль">
-        <button>Сохранить изменения</button>
-      </div>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Фото профиля -->
+        <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Profile Picture"
+             onerror="this.src='{% static '/img/default.png' %}'">
+        <label for="imageUpload" class="button-upload">
+          Загрузить изображение
+        </label>
+        <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;">
+
+        <!-- Поля для изменения данных -->
+        <input type="text" name="fio" value="{{ patient.fio }}" placeholder="ФИО">
+        <input type="email" name="email" value="{{ patient.email }}" placeholder="Почта">
+        <input type="tel" name="phone" value="{{ patient.phone }}" placeholder="Телефон">
+
+        <!-- Поля для изменения пароля -->
+        <input type="password" name="old_password" placeholder="Старый пароль">
+        <input type="password" name="new_password" placeholder="Новый пароль">
+        <input type="password" name="confirm_password" placeholder="Повторить новый пароль">
+
+        <!-- Сохранение изменений -->
+        <button type="submit">Сохранить изменения</button>
+      </form>
+        </div>
     </div>
   </main>
   {% include 'main/footer.html' %}

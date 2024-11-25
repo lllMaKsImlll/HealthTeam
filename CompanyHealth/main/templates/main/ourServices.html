@@ -5,16 +5,17 @@
     <title>Наши услуги</title>
     {% load static %}
     <link rel="stylesheet" href="{% static '/css/main.css' %}">
+     <link rel="stylesheet" href="{% static '/css/ourServices.css' %}">
 </head>
 <body>
   {% include 'main/header.html' %}
-  <main>
-        <div class="conteiner">
+    <main>
+        <div class="container services">
             <h1>Наши услуги</h1>
             <p>Здесь Вы сможете ознакомиться с возможностями нашего сайта и выбирайте подходящий способ получения медицинской помощи.</p>
             <div class="block-items">
                 <div class="block-item">
-                    <img src="{% static '/img/dochome.jpg' %}" alt="doctor_home">
+                    <img src="{% static 'img/dochome.jpg' %}" alt="doctor_home">
                     <div class="block-text">
                         <h2>Вызов врача на дом</h2>
                         <p>Воспользуйтесь услугой вызова врача на дом, если вы нуждаетесь в медицинской помощи, но не можете посетить клинику. Услуга доступна для взрослых и детей.</p>
@@ -34,7 +35,7 @@
                             <li><span>Удобство:</span> Выберите удобную дату, время и врача, основываясь на рейтингах и отзывах.</li>
                         </ul>
                     </div>
-                    <img src="{% static '/img/doccenter.jpg' %}" alt="doctor_home">
+                    <img src="{% static 'img/doccenter.jpg' %}" alt="doctor_center">
                 </div>
             </div>
             <div class="block-how-it-work">
@@ -45,11 +46,11 @@
                         После чего начать кнопку Найти.</p>
                 </div>
                 <div class="block-video">
-                    <img src="{% static '/img/gif.gif' %}" alt="GIF">
+                    <img src="{% static 'img/gif.gif' %}" alt="GIF">
                 </div>
             </div>
         </div>
-  </main>
+    </main>
   {% include 'main/footer.html' %}
 </body>
 </html>

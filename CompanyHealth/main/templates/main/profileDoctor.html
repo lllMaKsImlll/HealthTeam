@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/profile.css' %}">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <title>Профиль доктора</title>
+</head>
+<body>
+    {% load utils %}
+    {% include 'main/header.html' %}
+    <main>
+        <div class="container">
+            <div class="profileDoctor">
+                <div class="profile-img">
+                    <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Profile Picture">
+                </div>
+                <div class="profile-details">
+                    <h2>{{ doctor.fio }}</h2>
+                    <p>{{ doctor.email }}</p>
+                    <p>{{ doctor.profession }}</p>
+                    <p>Стаж {{ doctor.experience|declension_years }}</p>
+                    <p>{{ appointment.doctor.phone }}</p>
+                    <a href="{% url 'logout' %}">
+                        <button class="bad-button">Выйти</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container filters">
+            <input type="text" placeholder="Специальность">
+            <input type="date">
+            <button>Фильтр</button>
+        </div>
+
+        <div class="container appointments">
+            <h3>К вам записались</h3>
+            {% for appointment in appointments %}
+            <div class="card">
+                <div class="card-content">
+                  <div class="doctor-info">
+                    <div class="pacient-img">
+                        <img src="{% if appointment.patient.image %}{{ appointment.patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
+                    </div>
+                    <div class="doctor-details">
+                      <h4>{{ appointment.patient.fio }}</h4>
+                      <p>{{ appointment.patient.email }}</p>
+                      <p>{{ appointment.patient.phone }}</p>
+                    </div>
+                  </div>
+                  <div class="appointment-info">
+                    <span>
+                        <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
+                    </span>
+                    <p>каб. {{ doctor.room }}</p>
+                  </div>
+                </div>
+                <a href="{% url 'specific_appointment_for_patient' appointment.id %}">
+                    <button class="details-button">Подробнее</button>
+                </a>
+            </div>
+            {% empty %}
+                <p>У вас нет записей на прием.</p>
+            {% endfor %}
+        </div>
+
+    </main>
+   {% include 'main/footer.html' %}
+</body>
+</html>

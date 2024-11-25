@@ -1,0 +1,37 @@
+.block {
+    margin-top: 200px;
+}
+
+.specificAppointment {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.specificAppointment h1 {
+    font-size: 35px;
+    font-style: italic;
+}
+
+.specificAppointment .profile-container-img {
+    border-radius: 50%;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.25);
+    overflow: hidden;
+    position: absolute;
+    margin-top: -800px;
+}
+
+.specificAppointment .text-block {
+    padding: 20px 15px;
+    color: #868786;
+}
+
+.specificAppointment .profile-container-img img{
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}

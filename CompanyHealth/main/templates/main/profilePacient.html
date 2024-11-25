@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/profile.css' %}">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <title>Профиль пациента</title>
+</head>
+<body>
+    {% include 'main/header.html' %}
+
+    <main>
+        {% load utils %}
+        <div class="container">
+            <div class="profileDoctor">
+                <div class="profile-img">
+                    <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
+                </div>
+                <div class="profile-details">
+                    <h2>{{ patient.fio }}</h2>
+                    <p>{{ patient.email }}</p>
+                    <a href="{% url 'logout' %}">
+                        <button class="bad-button">Выйти</button>
+                    </a>
+                    <a href="{% url 'editProfile' %}">
+                        <button class="good-button">Редактоировать профиль</button>
+                    </a>
+                    <a href="{% url 'appointments' %}">
+                        <button class="good-button">Записаться ко врачу</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container filters">
+            <input type="text" placeholder="Специальность">
+            <input type="date">
+            <button>Фильтр</button>
+        </div>
+
+        <div class="container appointments">
+            <h3>Записи на прием</h3>
+            {% for appointment in upcoming_appointments %}
+            <div class="appointment-card">
+                <div class="pacient-info">
+                    <div class="pacient-img">
+                        <img src="{% if appointment.doctor.image %}{{ appointment.doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
+                    </div>
+                    <div class="pacient-details">
+                        <h4>{{ appointment.doctor.fio }}</h4>
+                        <p>{{ appointment.doctor.profession }}</p>
+                        <p>Стаж {{ appointment.doctor.experience|declension_years }}</p>
+                        <p>{{ appointment.doctor.phone }}</p>
+                    </div>
+                </div>
+                <div class="appointment-info">
+                    <span>
+                        <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
+                    </span>
+                    <p>{{ appointment.doctor.adress }}, каб. {{ appointment.doctor.room }}</p>
+                    <form action="{% url 'cancel_appointment' %}" method="post" style="margin-top: 10px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+                        <button type="submit" class="bad-button cancel-button">Отказаться от приема</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+                <p>У вас нет записей на прием.</p>
+            {% endfor %}
+        </div>
+
+        <div class="container appointments visited">
+            <h3>Посещенные приемы</h3>
+            {% for appointment in visited_appointments %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="doctor-info">
+                        <div class="pacient-img">
+                            <img src="{% if appointment.doctor.image %}{{ appointment.doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
+                        </div>
+                        <div class="doctor-details">
+                            <h4>{{ appointment.doctor.fio }}</h4>
+                            <p>{{ appointment.doctor.profession }}</p>
+                            <p>Стаж {{ appointment.doctor.experience|declension_years }}</p>
+                        </div>
+                    </div>
+                    <div class="appointment-info">
+                        <span>
+                            <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
+                        </span>
+                        <p>{{ appointment.doctor.adress }}, каб. {{ appointment.doctor.room }}</p>
+                    </div>
+                </div>
+                <button class="details-button">Подробнее</button>
+            </div>
+            {% empty %}
+                <p>У вас нет посещенных приемов.</p>
+            {% endfor %}
+        </div>
+
+          
+
+    </main>
+    {% include 'main/footer.html' %}
+</body>
+</html>
