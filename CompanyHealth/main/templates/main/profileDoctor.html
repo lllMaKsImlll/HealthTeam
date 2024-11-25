@@ -31,9 +31,16 @@
         </div>
 
         <div class="container filters">
-            <input type="text" placeholder="Специальность">
-            <input type="date">
-            <button>Фильтр</button>
+            <form method="get">
+                <input
+                    type="date"
+                    name="date"
+                    value="{{ filter_date|default:'' }}">
+                <button type="submit">Фильтр</button>
+                <a href="{% url request.resolver_match.url_name %}">
+                    <button type="button">Сбросить фильтр</button>
+                </a>
+            </form>
         </div>
 
         <div class="container appointments">

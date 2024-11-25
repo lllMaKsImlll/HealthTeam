@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2ffe4149-8392-45e2-a85e-df871e8dc281" name="Changes" comment="Relize v0.63" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="maksim" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PostKor&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lllMaKsImlll/HealthTeam.git&quot;,
+    &quot;accountId&quot;: &quot;aab85a8e-4045-4024-a0bc-9e8bf1b8ea94&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2p8r3phJUDCARwaeF9aK6pQWMFc" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/user/PycharmProjects"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\PycharmProjects\HealthTeam\CompanyHealth\static\img" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2ffe4149-8392-45e2-a85e-df871e8dc281" name="Changes" comment="" />
+      <created>1732158347688</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732158347688</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Relize v0.3">
+      <option name="closed" value="true" />
+      <created>1732159624773</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732159624773</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Relize v0.31">
+      <option name="closed" value="true" />
+      <created>1732159823325</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732159823325</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Relize v0.35">
+      <option name="closed" value="true" />
+      <created>1732160703077</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732160703077</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Relize v0.4">
+      <option name="closed" value="true" />
+      <created>1732183933504</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732183933504</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Relize v0.401">
+      <option name="closed" value="true" />
+      <created>1732184192680</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732184192680</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Relize v0.41">
+      <option name="closed" value="true" />
+      <created>1732184701982</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732184701982</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Relize v0.42">
+      <option name="closed" value="true" />
+      <created>1732185129433</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732185129433</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Relize v0.43">
+      <option name="closed" value="true" />
+      <created>1732185793782</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1732185793782</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Relize v0.431">
+      <option name="closed" value="true" />
+      <created>1732185995593</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1732185995593</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Relize v0.435">
+      <option name="closed" value="true" />
+      <created>1732186622796</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1732186622796</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Relize v0.5">
+      <option name="closed" value="true" />
+      <created>1732207335168</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1732207335168</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Relize v0.6">
+      <option name="closed" value="true" />
+      <created>1732209462032</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1732209462032</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Relize v0.601">
+      <option name="closed" value="true" />
+      <created>1732210041112</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1732210041112</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Relize v0.62">
+      <option name="closed" value="true" />
+      <created>1732211003007</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1732211003007</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Relize v0.62">
+      <option name="closed" value="true" />
+      <created>1732211525233</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1732211525233</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Relize v0.62">
+      <option name="closed" value="true" />
+      <created>1732212309056</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1732212309056</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Relize v0.63">
+      <option name="closed" value="true" />
+      <created>1732248254612</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1732248254612</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Relize v0.2" />
+    <MESSAGE value="Relize v0" />
+    <MESSAGE value="Relize v0.3" />
+    <MESSAGE value="Relize v0.31" />
+    <MESSAGE value="Relize v0.35" />
+    <MESSAGE value="Relize v0.4" />
+    <MESSAGE value="Relize v0.401" />
+    <MESSAGE value="Relize v0.41" />
+    <MESSAGE value="Relize v0.42" />
+    <MESSAGE value="Relize v0.43" />
+    <MESSAGE value="Relize v0.431" />
+    <MESSAGE value="Relize v0.435" />
+    <MESSAGE value="Relize v0.5" />
+    <MESSAGE value="Relize v0.6" />
+    <MESSAGE value="Relize v0.601" />
+    <MESSAGE value="Relize v0.62" />
+    <MESSAGE value="Relize v0.63" />
+    <option name="LAST_COMMIT_MESSAGE" value="Relize v0.63" />
+  </component>
+</project>

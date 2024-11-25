@@ -16,12 +16,14 @@ def login_view(request):
 
             patient = Patient.objects.filter(phone=phone).first()
             if patient and patient.check_password(password):
+                # Устанавливаем сессию для пациента
                 request.session['user_type'] = 'patient'
                 request.session['patient_id'] = patient.id
                 return redirect(next_url)
 
             doctor = Doctor.objects.filter(phone=phone).first()
             if doctor and doctor.check_password(password):
+                # Устанавливаем сессию для доктора
                 request.session['user_type'] = 'doctor'
                 request.session['doctor_id'] = doctor.id
                 return redirect(next_url)
@@ -117,14 +119,19 @@ def profile_view(request):
             return render(request, 'main/profileDoctor.html', {'error': 'Доктор не найден.'})
 
         doctor = get_object_or_404(Doctor, id=doctor_id)
-        # Разделяем записи: текущие и завершенные
-        ongoing_appointments = Appointment.objects.filter(doctor=doctor, visited=False)
+        upcoming_appointments = Appointment.objects.filter(doctor=doctor).exclude(visited=True)
         visited_appointments = Appointment.objects.filter(doctor=doctor, visited=True)
+
+        filter_date = request.GET.get('date', '').strip()
+
+        if filter_date:
+            upcoming_appointments = upcoming_appointments.filter(date__date=filter_date)
 
         return render(request, 'main/profileDoctor.html', {
             'doctor': doctor,
-            'ongoing_appointments': ongoing_appointments,
-            'visited_appointments': visited_appointments
+            'upcoming_appointments': upcoming_appointments,  # Приводим название к тому, что используется в шаблоне
+            'visited_appointments': visited_appointments,
+            'filter_date': filter_date,
         })
 
     return redirect('login')
