@@ -35,9 +35,18 @@
         </div>
 
         <div class="container filters">
-            <input type="text" placeholder="Специальность">
-            <input type="date">
-            <button>Фильтр</button>
+            <form method="get">
+                <input
+                    type="text"
+                    name="specialty"
+                    placeholder="Специальность"
+                    value="{{ filter_specialty|default:'' }}">
+                <input
+                    type="date"
+                    name="date"
+                    value="{{ filter_date|default:'' }}">
+                <button type="submit">Фильтр</button>
+            </form>
         </div>
 
         <div class="container appointments">
@@ -94,7 +103,9 @@
                         <p>{{ appointment.doctor.adress }}, каб. {{ appointment.doctor.room }}</p>
                     </div>
                 </div>
-                <button class="details-button">Подробнее</button>
+                <a href="{% url 'specific_appointment_for_doctor' appointment.id %}">
+                    <button class="details-button">Подробнее</button>
+                </a>
             </div>
             {% empty %}
                 <p>У вас нет посещенных приемов.</p>

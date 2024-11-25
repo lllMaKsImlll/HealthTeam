@@ -59,7 +59,7 @@ class Appointment(models.Model):
     date = models.DateTimeField('Дата и время приема')
     description = models.TextField('Описание проблемы', blank=True, null=True)
     recommendations = models.TextField('Рекомендации', blank=True, null=True)
-    visited = models.BooleanField('Посещенно', null=True)
+    visited = models.BooleanField('Посещенно', default=False)
 
     def __str__(self):
         return f"Прием {self.patient.fio} у {self.doctor.fio}"

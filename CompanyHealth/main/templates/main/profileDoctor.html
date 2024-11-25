@@ -37,26 +37,26 @@
         </div>
 
         <div class="container appointments">
-            <h3>К вам записались</h3>
-            {% for appointment in appointments %}
+            <h3>Записи на прием</h3>
+            {% for appointment in upcoming_appointments %}
             <div class="card">
                 <div class="card-content">
-                  <div class="doctor-info">
-                    <div class="pacient-img">
-                        <img src="{% if appointment.patient.image %}{{ appointment.patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
+                    <div class="doctor-info">
+                        <div class="pacient-img">
+                            <img src="{% if appointment.patient.image %}{{ appointment.patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
+                        </div>
+                        <div class="doctor-details">
+                            <h4>{{ appointment.patient.fio }}</h4>
+                            <p>{{ appointment.patient.email }}</p>
+                            <p>{{ appointment.patient.phone }}</p>
+                        </div>
                     </div>
-                    <div class="doctor-details">
-                      <h4>{{ appointment.patient.fio }}</h4>
-                      <p>{{ appointment.patient.email }}</p>
-                      <p>{{ appointment.patient.phone }}</p>
+                    <div class="appointment-info">
+                        <span>
+                            <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
+                        </span>
+                        <p>каб. {{ appointment.doctor.room }}</p>
                     </div>
-                  </div>
-                  <div class="appointment-info">
-                    <span>
-                        <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
-                    </span>
-                    <p>каб. {{ doctor.room }}</p>
-                  </div>
                 </div>
                 <a href="{% url 'specific_appointment_for_patient' appointment.id %}">
                     <button class="details-button">Подробнее</button>
@@ -67,6 +67,36 @@
             {% endfor %}
         </div>
 
+        <div class="container appointments visited">
+            <h3>Завершенные приемы</h3>
+            {% for appointment in visited_appointments %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="doctor-info">
+                        <div class="pacient-img">
+                            <img src="{% if appointment.patient.image %}{{ appointment.patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
+                        </div>
+                        <div class="doctor-details">
+                            <h4>{{ appointment.patient.fio }}</h4>
+                            <p>{{ appointment.patient.email }}</p>
+                            <p>{{ appointment.patient.phone }}</p>
+                        </div>
+                    </div>
+                    <div class="appointment-info">
+                        <span>
+                            <p>{{ appointment.date|date:"d.m.Y H:i" }}</p>
+                        </span>
+                        <p>каб. {{ appointment.doctor.room }}</p>
+                    </div>
+                </div>
+                <a href="{% url 'specific_appointment_for_patient' appointment.id %}">
+                    <button class="details-button">Подробнее</button>
+                </a>
+            </div>
+            {% empty %}
+                <p>У вас нет завершенных приемов.</p>
+            {% endfor %}
+        </div>
     </main>
    {% include 'main/footer.html' %}
 </body>

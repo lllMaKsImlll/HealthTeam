@@ -8,6 +8,7 @@
     <title>Подробности записи на прием</title>
 </head>
 <body>
+    {% include 'main/header.html' %}
     <main>
         <div class="block">
             <div class="container specificAppointment">
@@ -17,11 +18,23 @@
                 <h1>{{ patient.fio }}</h1>
                 <p>{{ patient.email }}</p>
                 <p>{{ patient.phone }}</p>
+
                 <h2>Проблемы</h2>
                 <p class="text-block">{{ appointment.description }}</p>
-                <h2>Рекомендации</h2>
-                <p class="text-block">{{ appointment.recommendations }}</p>
-                <button class="good-button">Оставить рекомендацию</button>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <h2>Рекомендации</h2>
+                    <textarea name="recommendations" class="text-block">{{ appointment.recommendations }}</textarea>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="visited" name="visited" {% if appointment.visited %}checked{% endif %}>
+                        <label for="visited">Прием завершен</label>
+                    </div>
+
+                    <button type="submit" class="good-button">Сохранить изменения</button>
+                </form>
+
                 <a href="javascript:history.back()">
                     <button>Назад</button>
                 </a>

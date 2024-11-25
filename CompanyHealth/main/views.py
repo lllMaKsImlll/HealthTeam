@@ -91,14 +91,24 @@ def profile_view(request):
             return render(request, 'main/profilePacient.html', {'error': 'Пациент не найден.'})
 
         patient = get_object_or_404(Patient, id=patient_id)
-        # Разделяем записи: предстоящие и посещенные
-        upcoming_appointments = Appointment.objects.filter(patient=patient, visited=False)
+
+        upcoming_appointments = Appointment.objects.filter(patient=patient).exclude(visited=True)
         visited_appointments = Appointment.objects.filter(patient=patient, visited=True)
+
+        filter_specialty = request.GET.get('specialty', '').strip()
+        filter_date = request.GET.get('date', '').strip()
+
+        if filter_specialty:
+            upcoming_appointments = upcoming_appointments.filter(doctor__profession__icontains=filter_specialty)
+        if filter_date:
+            upcoming_appointments = upcoming_appointments.filter(date__date=filter_date)
 
         return render(request, 'main/profilePacient.html', {
             'patient': patient,
             'upcoming_appointments': upcoming_appointments,
-            'visited_appointments': visited_appointments
+            'visited_appointments': visited_appointments,
+            'filter_specialty': filter_specialty,
+            'filter_date': filter_date,
         })
 
     elif user_type == 'doctor':
@@ -107,11 +117,14 @@ def profile_view(request):
             return render(request, 'main/profileDoctor.html', {'error': 'Доктор не найден.'})
 
         doctor = get_object_or_404(Doctor, id=doctor_id)
-        appointments = Appointment.objects.filter(doctor=doctor)
+        # Разделяем записи: текущие и завершенные
+        ongoing_appointments = Appointment.objects.filter(doctor=doctor, visited=False)
+        visited_appointments = Appointment.objects.filter(doctor=doctor, visited=True)
 
         return render(request, 'main/profileDoctor.html', {
             'doctor': doctor,
-            'appointments': appointments
+            'ongoing_appointments': ongoing_appointments,
+            'visited_appointments': visited_appointments
         })
 
     return redirect('login')
@@ -145,33 +158,34 @@ def appointments_view(request):
         except Doctor.DoesNotExist:
             doctor = None
 
-        search_results = None  # Результаты поиска
-        profession = ''
-        area = ''
+    search_results = None  # Результаты поиска
+    profession = ''
+    area = ''
 
-        if request.method == "POST":
-            # Получаем данные из формы.
-            profession = request.POST.get('profession', '').strip()
-            area = request.POST.get('district', '').strip()
+    if request.method == "POST":
+        # Получаем данные из формы.
+        profession = request.POST.get('profession', '').strip()
+        area = request.POST.get('district', '').strip()
 
-            # Выполняем поиск по специальности и району, если они указаны.
-            query = Doctor.objects.all()
-            if profession:
-                query = query.filter(profession__icontains=profession)
-            if area:
-                query = query.filter(area__icontains=area)
+        # Выполняем поиск по специальности и району, если они указаны.
+        query = Doctor.objects.all()
+        if profession:
+            query = query.filter(profession__icontains=profession)
+        if area:
+            query = query.filter(area__icontains=area)
 
-            # Если запрос ничего не нашел, передаём пустой список.
-            search_results = query if query.exists() else []
+        # Если запрос ничего не нашел, передаём пустой список.
+        search_results = query if query.exists() else []
 
-        return render(request, 'main/appointments.html', {
-            'search_results': search_results,
-            'profession': profession,  # Передаём введённую специальность
-            'district': area,  # Передаём введённый район
-            'patient': patient,
-            'professions': professions,
-            'districts': districts
-        })
+    # Гарантируем, что всегда будет возврат `render`
+    return render(request, 'main/appointments.html', {
+        'search_results': search_results,
+        'profession': profession,  # Передаём введённую специальность
+        'district': area,  # Передаём введённый район
+        'patient': patient,
+        'professions': professions,
+        'districts': districts
+    })
 
 def contacts_view(request):
     patient_id = request.session.get('patient_id')
@@ -307,6 +321,14 @@ def editProfile_view(request):
     patient = get_object_or_404(Patient, id=patient_id)
 
     if request.method == 'POST':
+        if 'remove_image' in request.POST:
+            if patient.image:
+                patient.image.delete()  # Удаляем файл изображения
+                patient.image = None
+                patient.save()
+                messages.success(request, "Изображение профиля удалено.")
+            return redirect('editProfile')
+
         fio = request.POST.get('fio')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
@@ -341,6 +363,7 @@ def editProfile_view(request):
     return render(request, 'main/editProfile.html', {
         'patient': patient,
     })
+
 
 def make_appointment(request, doctor_id):
     patient_id = request.session.get('patient_id')
@@ -404,6 +427,16 @@ def specific_appointment_for_patient(request, appointment_id):
 
     patient = appointment.patient
     doctor = appointment.doctor
+
+    if request.method == 'POST':
+        recommendations = request.POST.get('recommendations', '').strip()
+        visited = request.POST.get('visited') == 'on'
+
+        appointment.recommendations = recommendations
+        appointment.visited = visited
+        appointment.save()
+
+        return redirect('profile')
 
     return render(request, 'main/specificAppointmentForPacient.html', {
         'appointment': appointment,

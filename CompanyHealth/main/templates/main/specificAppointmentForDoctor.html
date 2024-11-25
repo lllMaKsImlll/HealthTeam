@@ -12,9 +12,9 @@
         <div class="block">
             <div class="container for-pacient">
                 <div class="profile-container-img">
-                    <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
+                    <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
                 </div>
-                <h1>{{ patient.fio }}</h1>
+                <h1>{{ doctor.fio }}</h1>
                 <p>Специальность: {{ doctor.profession }}</p>
                 <p>Стаж: {{ doctor.experience }} лет</p>
                 <p>Образование: {{ doctor.education }}</p>
