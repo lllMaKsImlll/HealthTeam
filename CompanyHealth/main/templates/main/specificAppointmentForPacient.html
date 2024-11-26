@@ -12,7 +12,7 @@
     <main>
         <div class="block">
             <div class="container specificAppointment">
-                <div class="profile-container-img" style="margin-top: -870px;">
+                <div class="profile-container-img">
                     <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
                 </div>
                 <h1>{{ patient.fio }}</h1>
@@ -20,15 +20,15 @@
                 <p>{{ patient.phone }}</p>
 
                 <h2>Проблемы</h2>
-                <p class="text-block">{{ appointment.description }}</p>
+                <textarea disabled="disabled">{{ appointment.description }}</textarea>
 
                 <form method="POST">
                     {% csrf_token %}
                     <h2>Рекомендации</h2>
-                    <textarea name="recommendations" class="text-block">{{ appointment.recommendations }}</textarea>
+                    <textarea class="recommendation">{{ appointment.recommendations }}</textarea>
 
                     <div class="checkbox-container">
-                        <input type="checkbox" id="visited" name="visited" {% if appointment.visited %}checked{% endif %}>
+                        <input class="check-box" type="checkbox" id="visited" name="visited" {% if appointment.visited %}checked{% endif %}>
                         <label for="visited">Прием завершен</label>
                     </div>
 
@@ -36,7 +36,7 @@
                 </form>
 
                 <a href="javascript:history.back()">
-                    <button>Назад</button>
+                    <button class="bad-button">Назад</button>
                 </a>
             </div>
         </div>

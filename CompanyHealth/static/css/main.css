@@ -39,8 +39,11 @@ main {
 /* Кнопки */
 button {
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 8px 15px;
+    margin: 3px 0;
+    color: white;
+    min-width: 300px;
 }
 
 .good-button {
@@ -49,6 +52,18 @@ button {
 
 .bad-button {
     background-color: #D74848;
+    color: white;
+}
+
+textarea {
+    background-color: #D9D9D9;
+    color: #868786;
+    border: none;
+    border-radius: 10px;
+    width: 80%;
+    height: auto;
+    resize: none;
+    padding: 10px 15px;
 }
 
 button:hover,
@@ -100,6 +115,7 @@ header button {
     background-color: white;
     border-radius: 15px;
     border: none;
+    color: black;
 }
 
 /* Подвал */
@@ -153,6 +169,7 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     gap: 20px;
 }
 
@@ -181,20 +198,18 @@ form input {
 }
 
 form button {
-    padding: 5px 10px;
+    padding: 10px 15px;
     background-color: #5B9F54;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     color: white;
-    width: 236px;
-    height: 53px;
     text-align: center;
 }
 
 /* Записи отзывов */
 .records-blocks h1,
 .about-servies-block h1,
-.ask-quastion-block h1,
+.ask-question-block h1,
 .result-search h1 {
     font-size: 55px;
     font-weight: bold;
@@ -269,7 +284,7 @@ form button {
 }
 
 /* Есть вопросы? */
-.ask-quastion-block {
+.ask-question-block {
     text-align: left;
     padding: 20px 30px;
     margin: 40px auto;
@@ -278,17 +293,28 @@ form button {
     border-radius: 40px;
 }
 
-.ask-quastion-block h2 {
+.ask-question-block h2 {
     font-size: 40px;
     margin-bottom: 20px;
 }
 
-.ask-quastion-block input {
+.ask-question-block input {
     background-color: #D9D9D9;
     border-radius: 25px;
     padding: 20px 15px;
     width: 90%;
     border: none;
+}
+
+.ask-question-block button{
+    padding: 5px 10px;
+    background-color: #5B9F54;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    width: 236px;
+    height: 53px;
+    text-align: center;
 }
 
 /* Страница: Запись ко врачу */

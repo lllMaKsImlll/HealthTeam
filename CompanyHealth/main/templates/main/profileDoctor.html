@@ -13,7 +13,7 @@
     {% include 'main/header.html' %}
     <main>
         <div class="container">
-            <div class="profileDoctor">
+            <div class="profile">
                 <div class="profile-img">
                     <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Profile Picture">
                 </div>
@@ -22,7 +22,7 @@
                     <p>{{ doctor.email }}</p>
                     <p>{{ doctor.profession }}</p>
                     <p>Стаж {{ doctor.experience|declension_years }}</p>
-                    <p>{{ appointment.doctor.phone }}</p>
+                    <p>{{ doctor.phone }}</p>
                     <a href="{% url 'logout' %}">
                         <button class="bad-button">Выйти</button>
                     </a>
@@ -31,11 +31,8 @@
         </div>
 
         <div class="container filters">
-            <form method="get">
-                <input
-                    type="date"
-                    name="date"
-                    value="{{ filter_date|default:'' }}">
+            <form method="get" class="form-filter">
+                <input type="date" name="date" value="{{ filter_date|default:'' }}">
                 <button type="submit">Фильтр</button>
                 <a href="{% url request.resolver_match.url_name %}">
                     <button type="button">Сбросить фильтр</button>

@@ -9,7 +9,7 @@
   <body>
   {% include 'main/header.html' %}
   <main>
-    <div class="conteiner-news">
+    <div class="container news">
       <h1>Новости и обновления</h1>
       <p>Будьте в курсе всех изменений и событий на нашем сайте и в сфере здравоохранения. </p>
       <div class="block-items">
@@ -20,7 +20,7 @@
             <div class="meta-data">{{ news.date }}</div>
           </div>
         {% empty %}
-          <p>Пока новостей нет.</p>
+          <p style="font-weight: bold;">Пока новостей нет.</p>
         {% endfor %}
       </div>
     </div>

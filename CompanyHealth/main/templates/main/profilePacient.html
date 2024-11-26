@@ -14,7 +14,7 @@
     <main>
         {% load utils %}
         <div class="container">
-            <div class="profileDoctor">
+            <div class="profile">
                 <div class="profile-img">
                     <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="pacient-img">
                 </div>

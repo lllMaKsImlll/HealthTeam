@@ -8,21 +8,19 @@
     <title>Подробности записи на прием</title>
 </head>
 <body>
+    {% include 'main/header.html' %}
     <main>
-        <div class="block">
-            <div class="container for-pacient">
-                <div class="profile-container-img">
+        <div class="container specificAppointment">
+            <div class="profile-container-img">
                     <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static 'img/defalt.png' %}{% endif %}" alt="doctor-img">
-                </div>
-                <h1>{{ doctor.fio }}</h1>
-                <p>Специальность: {{ doctor.profession }}</p>
-                <p>Стаж: {{ doctor.experience }} лет</p>
-                <p>Образование: {{ doctor.education }}</p>
-                <p>Почта: {{ patient.email }}</p>
-                <h2>Рекомендации</h2>
-                <p class="recomedation">{{ appointment.recommendations }}</p>
-                <button class="good-button" onclick="window.history.back();">Назад</button>
             </div>
+            <h1>{{ doctor.fio }}</h1>
+            <p>Специальность: {{ doctor.profession }}</p>
+            <p>Стаж: {{ doctor.experience }} лет</p>
+            <p>Почта: {{ patient.email }}</p>
+            <h2>Рекомендации</h2>
+            <textarea disabled="disabled">{{ appointment.recommendations }}</textarea>
+            <button class="good-button" onclick="window.history.back();">Назад</button>
         </div>
     </main>
 </body>
