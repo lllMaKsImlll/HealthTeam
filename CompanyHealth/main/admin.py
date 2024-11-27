@@ -6,6 +6,8 @@ admin.site.register(Patient)
 admin.site.register(Record)
 admin.site.register(Appointment)
 admin.site.register(News)
+admin.site.register(DoctorSchedule)
+admin.site.register(Question)
 
 @admin.register(HomeVisit)
 class HomeVisitAdmin(admin.ModelAdmin):

@@ -77,8 +77,11 @@
 
         <div class="ask-question-block">
             <h2>Есть вопросы? - Задавай</h2>
-            <input type="text" placeholder="Введите вопрос"><br>
-            <button>Задать</button>
+            <form method="POST" action="{% url 'ask_question' %}">
+                {% csrf_token %}
+                <input type="text" name="question" placeholder="Введите вопрос" required><br>
+                <button type="submit">Задать</button>
+            </form>
         </div>
 
         

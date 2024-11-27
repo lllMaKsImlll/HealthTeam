@@ -10,32 +10,63 @@
 <body>
     {% include 'main/header.html' %}
     <main>
-
         <div class="sub-header">
             <img src="{% static '/img/icon1.png' %}" alt="picture 1">
             <img src="{% static '/img/icon3.png' %}" alt="picture 2">
+
+            <!-- Основная форма для поиска врачей по специальности и району -->
             <form action="{% url 'appointments' %}" method="post">
                 {% csrf_token %}
                 <label for="profession">Специальность:</label>
                 <select name="profession" id="profession">
-                    <option value="">Специальность</option>
+                    <option value="">Выберите специальность</option>
                     {% for prof in professions %}
                     <option value="{{ prof }}" {% if prof == profession %}selected{% endif %}>{{ prof }}</option>
                     {% endfor %}
                 </select>
+
                 <label for="district">Район:</label>
                 <select name="district" id="district">
-                    <option value="">Район</option>
+                    <option value="">Выберите район</option>
                     {% for dist in districts %}
                     <option value="{{ dist }}" {% if dist == district %}selected{% endif %}>{{ dist }}</option>
                     {% endfor %}
                 </select>
+
                 <button id="record-button" type="submit">Поиск</button>
             </form>
+
             <img src="{% static '/img/icon4.png' %}" alt="picture 3">
             <img src="{% static '/img/icon2.png' %}" alt="picture 4">
         </div>
 
+        <!-- Блок с дополнительными фильтрами (Пол, Стаж) -->
+        <div class="filter-box">
+            <h3>Дополнительные фильтры</h3>
+            <form action="{% url 'appointments' %}" method="post">
+                {% csrf_token %}
+
+                <label for="gender">Пол:</label>
+                <select name="gender" id="gender">
+                    <option value="">Выберите пол</option>
+                    {% for g in genders %}
+                    <option value="{{ g }}" {% if g == gender %}selected{% endif %}>{{ g }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="experience">Стаж:</label>
+                <select name="experience" id="experience">
+                    <option value="">Выберите стаж</option>
+                    {% for exp in experience_choices %}
+                    <option value="{{ exp }}" {% if exp == experience %}selected{% endif %}>От {{ exp }} лет</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Применить фильтры</button>
+            </form>
+        </div>
+
+        <!-- Результаты поиска -->
         <div class="result-search">
             <h1>Результат поиска</h1>
             {% if search_results %}
@@ -45,7 +76,7 @@
                         <div class="information-search">
                             <h1>{{ doctor.fio }}</h1>
                             <p>{{ doctor.profession }}</p>
-                            <p>Стаж {{ doctor.experience }} лет</p>
+                            <p>Стаж: {{ doctor.experience }} лет</p>
                             <h3>{{ doctor.phone }}</h3>
                         </div>
                         <div class="other">

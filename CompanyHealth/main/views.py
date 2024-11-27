@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
-from django.http import HttpResponseForbidden
+from datetime import datetime, timedelta, time
+from django.http import HttpResponseForbidden, JsonResponse
 from django.utils import timezone
 
 
@@ -51,6 +52,7 @@ def register_view(request):
     return render(request, 'main/register.html', {'form': form})
 
 
+@login_required
 def home(request):
     professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
     districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
@@ -73,12 +75,22 @@ def home(request):
         except Doctor.DoesNotExist:
             doctor = None
 
+    if request.method == "POST":
+        question_text = request.POST.get('question').strip()
+
+        Question.objects.create(
+            email=patient.email,
+            question_text=question_text
+        )
+
+        return redirect('success_page')
+
     records = Record.objects.all()
 
     return render(request, 'main/index.html', {
         'records': records,
         'patient': patient,
-        'doctor': doctor,  # Передаем данные доктора
+        'doctor': doctor,
         'professions': professions,
         'districts': districts
     })
@@ -148,6 +160,10 @@ def logout_view(request):
     return redirect('index')
 
 
+from django.shortcuts import render
+from .models import Doctor
+
+
 def appointments_view(request):
     professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
     districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
@@ -171,19 +187,19 @@ def appointments_view(request):
 
     search_results = None
     profession = ''
-    area = ''
+    area = ''  # Изменить название переменной на 'area', а не 'district'
 
-    if profession == '' and area == '':
+    if profession == '' and area == '':  # Правильная проверка по 'area'
         search_results = Doctor.objects.all()
 
     if request.method == "POST":
         profession = request.POST.get('profession', '').strip()
-        area = request.POST.get('district', '').strip()
+        area = request.POST.get('district', '').strip()  # Здесь берем значение из формы как 'district'
 
         query = Doctor.objects.all()
         if profession:
             query = query.filter(profession__icontains=profession)
-        if area:
+        if area:  # Здесь фильтруем по 'area', а не 'district'
             query = query.filter(area__icontains=area)
 
         search_results = query if query.exists() else []
@@ -191,12 +207,14 @@ def appointments_view(request):
     return render(request, 'main/appointments.html', {
         'search_results': search_results,
         'profession': profession,
-        'district': area,
+        'district': area,  # Используем 'area' как 'district' в шаблоне
         'patient': patient,
         'doctor': doctor,
         'professions': professions,
         'districts': districts
     })
+
+
 
 def contacts_view(request):
     patient_id = request.session.get('patient_id')
@@ -377,38 +395,87 @@ def editProfile_view(request):
 
 
 def make_appointment(request, doctor_id):
+    patient_id = request.session.get('patient_id')
+    if not patient_id:
+        return HttpResponseForbidden("Врач не может записаться к другому врачу!")
+
+    try:
+        patient = Patient.objects.get(id=patient_id)
+    except Patient.DoesNotExist:
+        return redirect('login')
+
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+
+    current_doctor_id = request.session.get('doctor_id')
+    if current_doctor_id and int(current_doctor_id) == int(doctor_id):
+        return HttpResponseForbidden("Врач не может записаться к самому себе.")
+
+    doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor)
+
+    available_slots = []
+    if doctor_schedule.exists():
+        now = datetime.now()
+
+        for schedule in doctor_schedule:
+            start_time = schedule.start_time
+            end_time = schedule.end_time
+            break_start = schedule.break_start
+            break_end = schedule.break_end
+
+            current_time = datetime.combine(datetime.today(), start_time)
+
+            while current_time.time() < end_time:
+                if break_start and break_end:
+                    if current_time.time() >= break_start and current_time.time() < break_end:
+                        current_time = datetime.combine(datetime.today(), break_end)
+                        continue
+
+                if current_time < now:
+                    current_time += timedelta(minutes=30)
+                    continue
+
+                appointment_datetime = datetime.combine(datetime.today(), current_time.time())
+                existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+                if existing_appointment.exists():
+                    current_time += timedelta(minutes=30)
+                    continue
+
+                available_slots.append(current_time.time())
+                current_time += timedelta(minutes=30)
+
     if request.method == "POST":
-        patient_id = request.session.get('patient_id')
-        #doctor_id = request.session.get('doctor_id')
-
-        #if doctor_id:
-        #    return HttpResponseForbidden("Врачу нельзя записываться на приемы, только пациентам")
-
-        try:
-            patient = Patient.objects.get(id=patient_id)
-        except Patient.DoesNotExist:
-            return redirect('login')
-
-        doctor = get_object_or_404(Doctor, id=doctor_id)
         appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
         description = request.POST.get('description', '').strip()
 
-        if not appointment_date:
+        if not appointment_date or not appointment_time:
             return render(request, 'main/make_appointment.html', {
                 'doctor': doctor,
+                'available_slots': available_slots,
                 'error_message': 'Дата и время приема обязательны.'
+            })
+
+        appointment_datetime = datetime.combine(datetime.strptime(appointment_date, "%Y-%m-%d").date(),
+                                                datetime.strptime(appointment_time, "%H:%M").time())
+        existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+
+        if existing_appointment.exists():
+            return render(request, 'main/make_appointment.html', {
+                'doctor': doctor,
+                'available_slots': available_slots,
+                'error_message': 'Этот временной слот уже занят.'
             })
 
         Appointment.objects.create(
             patient=patient,
             doctor=doctor,
-            date=appointment_date,
+            date=appointment_datetime,
             description=description
         )
+
         return redirect('profile')
 
-    doctor = get_object_or_404(Doctor, id=doctor_id)
-    return render(request, 'main/make_appointment.html', {'doctor': doctor})
+    return render(request, 'main/make_appointment.html', {'doctor': doctor, 'available_slots': available_slots})
 
 @login_required
 def cancel_appointment(request):
@@ -506,11 +573,20 @@ def home_visits_list(request):
 
 @login_required
 def doctor_appointments(request):
-    doctor_id = request.user.id  # или если есть идентификатор врача, который связан с пользователем
-    appointments = Appointment.objects.filter(doctor_id=doctor_id, visited=False).order_by('date')
+    doctor_id = request.session.get('doctor_id')
     home_visits = HomeVisit.objects.filter(doctor_id=doctor_id, status='ASSIGNED').order_by('scheduled_time')
 
+    if doctor_id:
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+        except Doctor.DoesNotExist:
+            doctor = None
+
     return render(request, 'main/doctor_appointments.html', {
-        'appointments': appointments,
         'home_visits': home_visits,
+        'doctor': doctor
     })
+
+def ask_question_view(request):
+    return render(request, 'main/ask_success.html')
+

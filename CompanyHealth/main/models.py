@@ -9,6 +9,10 @@ class Patient(models.Model):
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
     password = models.CharField('Пароль', max_length=120)
 
+    class Meta:
+        verbose_name = "Пациент"
+        verbose_name_plural = "Пациенты"
+
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
@@ -43,6 +47,10 @@ class Doctor(models.Model):
     password = models.CharField('Пароль', max_length=120)
     gender = models.CharField('Пол', max_length=1, choices=GENDER_CHOICES, default='M')
 
+    class Meta:
+        verbose_name = "Доктор"
+        verbose_name_plural = "Доктора"
+
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
@@ -67,6 +75,10 @@ class Appointment(models.Model):
     recommendations = models.TextField('Рекомендации', blank=True, null=True)
     visited = models.BooleanField('Посещенно', default=False)
 
+    class Meta:
+        verbose_name = "Запись на прием"
+        verbose_name_plural = "Записи на прием"
+
     def __str__(self):
         return f"Прием {self.patient.fio} у {self.doctor.fio}"
 
@@ -75,6 +87,10 @@ class Record(models.Model):
     record = models.TextField('Отзыв')
     date = models.CharField('Дата отзыва', max_length=25)
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
+
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
     def __str__(self):
         return f"{self.name} {self.date}"
 
@@ -82,6 +98,10 @@ class News(models.Model):
     title = models.CharField('Заголовок', max_length=60)
     text = models.TextField('Описание новости')
     date = models.CharField('Дата выпуска новости', max_length=30)
+
+    class Meta:
+        verbose_name = "Новости"
+        verbose_name_plural = "Новости"
 
     def __str__(self):
         return f" новость {self.title} от {self.date}"
@@ -111,3 +131,31 @@ class HomeVisit(models.Model):
 
     def __str__(self):
         return f"Вызов {self.patient_name} на {self.address} ({self.get_status_display()})"
+
+
+class DoctorSchedule(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="schedules", verbose_name="Врач")
+    date = models.DateField("Дата рабочего дня")
+    start_time = models.TimeField("Время начала работы", default="08:00")
+    end_time = models.TimeField("Время окончания работы", default="20:00")
+    break_start = models.TimeField("Начало перерыва", blank=True, default="13:00")
+    break_end = models.TimeField("Конец перерыва", blank=True, default="14:00")
+
+    class Meta:
+        verbose_name = "Расписание врача"
+        verbose_name_plural = "Расписания врачей"
+
+    def __str__(self):
+        return f"{self.doctor.fio} - {self.date}"
+
+class Question(models.Model):
+    email = models.EmailField("Email пациента")
+    question_text = models.TextField("Вопрос")
+    created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
+
+    def __str__(self):
+        return f"Вопрос {self.created_at}"
+
+    class Meta:
+        verbose_name = "Вопросы пациентов"
+        verbose_name_plural = "Вопросы пациентов"

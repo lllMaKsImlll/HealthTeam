@@ -18,12 +18,27 @@
             <h2>Данные для записи</h2>
             <form method="POST">
                 {% csrf_token %}
-                <input type="datetime-local" id="appointment-date" name="appointment_date" placeholder="Дата и время приема">
-                <textarea id="description" name="description">Описание проблемы</textarea>
+
+                <label for="appointment-date">Дата приема:</label>
+                <input type="date" id="appointment-date" name="appointment_date" required>
+
+                <label for="appointment-time">Время приема:</label>
+                <select id="appointment-time" name="appointment_time" required>
+                    {% for slot in available_slots %}
+                        <option value="{{ slot|date:'H:i' }}">{{ slot|date:'H:i' }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="description">Описание проблемы:</label>
+                <textarea id="description" name="description" placeholder="Опишите вашу проблему" required></textarea>
+
                 <button type="submit">Записаться</button>
+
+                {% if error_message %}
+                    <p class="error">{{ error_message }}</p>
+                {% endif %}
             </form>
         </div>
     </div>
-    <div style="height: 60px"></div>
 </body>
 </html>
