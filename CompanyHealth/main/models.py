@@ -26,6 +26,11 @@ class Patient(models.Model):
 
 
 class Doctor(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Мужчина'),
+        ('F', 'Женщина'),
+    ]
+
     fio = models.CharField('ФИО', max_length=100)
     phone = models.CharField('Номер', max_length=11)
     email = models.CharField('Почта', max_length=100)
@@ -36,6 +41,7 @@ class Doctor(models.Model):
     adress = models.CharField('Адрес кабинета', max_length=120)
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
     password = models.CharField('Пароль', max_length=120)
+    gender = models.CharField('Пол', max_length=1, choices=GENDER_CHOICES, default='M')
 
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith('pbkdf2_'):
@@ -79,3 +85,29 @@ class News(models.Model):
 
     def __str__(self):
         return f" новость {self.title} от {self.date}"
+
+
+class HomeVisit(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'В ожидании'),
+        ('ASSIGNED', 'Назначен врач'),
+        ('COMPLETED', 'Завершено'),
+        ('CANCELLED', 'Отменено'),
+    ]
+
+    patient_name = models.CharField('Имя пациента', max_length=255)
+    patient_phone = models.CharField('Контактный телефон', max_length=15)
+    address = models.CharField('Адрес вызова', max_length=100)
+    symptoms = models.TextField('Симптомы', blank=True, null=True)
+    requested_time = models.DateTimeField('Время запроса', auto_now_add=True)
+    scheduled_time = models.DateTimeField('Запланированное время визита', null=True, blank=True)
+    doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL, null=True, blank=True, related_name='home_visits', verbose_name='Назначенный врач')
+    status = models.CharField('Статус', max_length=10, choices=STATUS_CHOICES, default='PENDING')
+
+    class Meta:
+        verbose_name = 'Вызов врача на дом'
+        verbose_name_plural = 'Вызовы врачей на дом'
+        ordering = ['-requested_time']
+
+    def __str__(self):
+        return f"Вызов {self.patient_name} на {self.address} ({self.get_status_display()})"

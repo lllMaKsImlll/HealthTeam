@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="get">
+        <label for="status">Фильтр по статусу:</label>
+        <select name="status" id="status">
+            <option value="PENDING" {% if status_filter == 'PENDING' %}selected{% endif %}>В ожидании</option>
+            <option value="ASSIGNED" {% if status_filter == 'ASSIGNED' %}selected{% endif %}>Назначен врач</option>
+            <option value="COMPLETED" {% if status_filter == 'COMPLETED' %}selected{% endif %}>Завершено</option>
+            <option value="CANCELLED" {% if status_filter == 'CANCELLED' %}selected{% endif %}>Отменено</option>
+        </select>
+        <button type="submit">Применить</button>
+    </form>
+
+    <h2>Вызовы</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Пациент</th>
+                <th>Адрес</th>
+                <th>Время запроса</th>
+                <th>Запланированное время</th>
+                <th>Врач</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for visit in visits %}
+            <tr>
+                <td>{{ visit.patient_name }}</td>
+                <td>{{ visit.address }}</td>
+                <td>{{ visit.requested_time|date:"d.m.Y H:i" }}</td>
+                <td>{{ visit.scheduled_time|date:"d.m.Y H:i" }}</td>
+                <td>
+                    {% if visit.doctor %}
+                        {{ visit.doctor.fio }}
+                    {% else %}
+                        Не назначен
+                    {% endif %}
+                </td>
+                <td>{{ visit.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Нет визитов с выбранным статусом</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'profile' %}">
+        <button class="good-button">Готово</button>
+    </a>
+</body>
+</html>

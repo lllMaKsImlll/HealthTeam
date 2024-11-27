@@ -14,10 +14,22 @@
         <div class="sub-header">
             <img src="{% static '/img/icon1.png' %}" alt="picture 1">
             <img src="{% static '/img/icon3.png' %}" alt="picture 2">
-            <form action="{% url 'appointments' %}"  method="post">
+            <form action="{% url 'appointments' %}" method="post">
                 {% csrf_token %}
-                <input type="text" name="profession" value="{{ profession }}" placeholder="Специальность">
-                <input type="text" name="district" value="{{ district }}" placeholder="Район">
+                <label for="profession">Специальность:</label>
+                <select name="profession" id="profession">
+                    <option value="">Специальность</option>
+                    {% for prof in professions %}
+                    <option value="{{ prof }}" {% if prof == profession %}selected{% endif %}>{{ prof }}</option>
+                    {% endfor %}
+                </select>
+                <label for="district">Район:</label>
+                <select name="district" id="district">
+                    <option value="">Район</option>
+                    {% for dist in districts %}
+                    <option value="{{ dist }}" {% if dist == district %}selected{% endif %}>{{ dist }}</option>
+                    {% endfor %}
+                </select>
                 <button id="record-button" type="submit">Поиск</button>
             </form>
             <img src="{% static '/img/icon4.png' %}" alt="picture 3">

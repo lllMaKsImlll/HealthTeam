@@ -30,17 +30,26 @@
                     <a href="{% url 'appointments' %}">
                         <button class="good-button">Записаться ко врачу</button>
                     </a>
+                    <a href="{% url 'create_home_visit' %}">
+                        <button class="good-button">Вызов врача на дом</button>
+                    </a>
+                    <a href="{% url 'home_visits_list' %}">
+                        <button class="good-button">Вызовы на дом</button>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="container filters">
             <form method="get">
-                <input
-                    type="text"
-                    name="specialty"
-                    placeholder="Специальность"
-                    value="{{ filter_specialty|default:'' }}">
+                <select name="specialty">
+                    <option value="">Выберите специальность</option>
+                    {% for profession in professions %}
+                    <option value="{{ profession }}" {% if profession == filter_specialty %}selected{% endif %}>
+                        {{ profession }}
+                    </option>
+                    {% endfor %}
+                </select>
                 <input
                     type="date"
                     name="date"

@@ -5,6 +5,15 @@
   {% load static %}
   <link rel="stylesheet" href="{% static '/css/main.css' %}">
   <link rel="stylesheet" href="{% static '/css/editProfile.css' %}">
+  <style>
+    #preview {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+    }
+  </style>
   <title>Редактирование профиля</title>
 </head>
 <body>
@@ -14,7 +23,9 @@
       <div class="form-edit">
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <img src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="Profile Picture"
+        <img id="preview"
+             src="{% if patient.image %}{{ patient.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}"
+             alt="Profile Picture"
              onerror="this.src='{% static '/img/default.png' %}'">
 
         <label for="imageUpload" class="button-upload">
@@ -40,5 +51,19 @@
     </div>
   </main>
   {% include 'main/footer.html' %}
+
+  <script>
+      document.getElementById('imageUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const preview = document.getElementById('preview');
+            preview.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
+from django.http import HttpResponseForbidden
 from django.utils import timezone
 
 
@@ -86,6 +87,7 @@ def home(request):
 @login_required
 def profile_view(request):
     user_type = request.session.get('user_type')
+    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
 
     if user_type == 'patient':
         patient_id = request.session.get('patient_id')
@@ -107,6 +109,7 @@ def profile_view(request):
 
         return render(request, 'main/profilePacient.html', {
             'patient': patient,
+            'professions': professions,
             'upcoming_appointments': upcoming_appointments,
             'visited_appointments': visited_appointments,
             'filter_specialty': filter_specialty,
@@ -129,6 +132,7 @@ def profile_view(request):
 
         return render(request, 'main/profileDoctor.html', {
             'doctor': doctor,
+            'professions': professions,
             'upcoming_appointments': upcoming_appointments,  # Приводим название к тому, что используется в шаблоне
             'visited_appointments': visited_appointments,
             'filter_date': filter_date,
@@ -165,31 +169,31 @@ def appointments_view(request):
         except Doctor.DoesNotExist:
             doctor = None
 
-    search_results = None  # Результаты поиска
+    search_results = None
     profession = ''
     area = ''
 
+    if profession == '' and area == '':
+        search_results = Doctor.objects.all()
+
     if request.method == "POST":
-        # Получаем данные из формы.
         profession = request.POST.get('profession', '').strip()
         area = request.POST.get('district', '').strip()
 
-        # Выполняем поиск по специальности и району, если они указаны.
         query = Doctor.objects.all()
         if profession:
             query = query.filter(profession__icontains=profession)
         if area:
             query = query.filter(area__icontains=area)
 
-        # Если запрос ничего не нашел, передаём пустой список.
         search_results = query if query.exists() else []
 
-    # Гарантируем, что всегда будет возврат `render`
     return render(request, 'main/appointments.html', {
         'search_results': search_results,
-        'profession': profession,  # Передаём введённую специальность
-        'district': area,  # Передаём введённый район
+        'profession': profession,
+        'district': area,
         'patient': patient,
+        'doctor': doctor,
         'professions': professions,
         'districts': districts
     })
@@ -373,50 +377,43 @@ def editProfile_view(request):
 
 
 def make_appointment(request, doctor_id):
-    patient_id = request.session.get('patient_id')
-    if not patient_id:
-        return redirect('login')
+    if request.method == "POST":
+        patient_id = request.session.get('patient_id')
+        #doctor_id = request.session.get('doctor_id')
 
-    patient = get_object_or_404(Patient, id=patient_id)
-    doctor = get_object_or_404(Doctor, id=doctor_id)
+        #if doctor_id:
+        #    return HttpResponseForbidden("Врачу нельзя записываться на приемы, только пациентам")
 
-    if request.method == 'POST':
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            return redirect('login')
+
+        doctor = get_object_or_404(Doctor, id=doctor_id)
         appointment_date = request.POST.get('appointment_date')
+        description = request.POST.get('description', '').strip()
 
-        if appointment_date:
-            try:
-                appointment_date = timezone.datetime.strptime(appointment_date,"%Y-%m-%dT%H:%M")  # Обратите внимание на формат
-            except ValueError:
-                return render(request, 'main/make_appointment.html', {
-                    'doctor': doctor,
-                    'error': 'Неверный формат даты и времени.'
-                })
-
-            appointment_description = request.POST.get('description', '')
-
-            appointment = Appointment.objects.create(
-                patient=patient,
-                doctor=doctor,
-                date=appointment_date,
-                description=appointment_description
-            )
-
-            return redirect('profile')
-
-        else:
+        if not appointment_date:
             return render(request, 'main/make_appointment.html', {
                 'doctor': doctor,
-                'error': 'Дата и время приема не могут быть пустыми.'
+                'error_message': 'Дата и время приема обязательны.'
             })
 
-    return render(request, 'main/make_appointment.html', {'doctor': doctor})
+        Appointment.objects.create(
+            patient=patient,
+            doctor=doctor,
+            date=appointment_date,
+            description=description
+        )
+        return redirect('profile')
 
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    return render(request, 'main/make_appointment.html', {'doctor': doctor})
 
 @login_required
 def cancel_appointment(request):
     if request.method == 'POST':
         appointment_id = request.POST.get('appointment_id')
-
         appointment = get_object_or_404(Appointment, id=appointment_id)
 
         if appointment.patient.id != request.session.get('patient_id'):
@@ -462,4 +459,58 @@ def specific_appointment_for_doctor(request, appointment_id):
         'appointment': appointment,
         'patient': patient,
         'doctor': doctor
+    })
+
+def create_home_visit(request):
+    if request.method == 'POST':
+        patient_name = request.POST['patient_name']
+        patient_phone = request.POST['patient_phone']
+        address = request.POST['address']
+        symptoms = request.POST.get('symptoms', '')
+
+        # Сохранение вызова
+        HomeVisit.objects.create(
+            patient_name=patient_name,
+            patient_phone=patient_phone,
+            address=address,
+            symptoms=symptoms
+        )
+        return redirect('home_visits_list')  # Переход на страницу со списком вызовов
+
+    return render(request, 'main/create_home_visit.html')
+
+
+from django.shortcuts import render
+from .models import HomeVisit
+
+
+def home_visits_list(request):
+    status_filter = request.GET.get('status', 'PENDING')
+
+    if status_filter == 'PENDING':
+        visits = HomeVisit.objects.filter(status='PENDING')
+    elif status_filter == 'ASSIGNED':
+        visits = HomeVisit.objects.filter(status='ASSIGNED')
+    elif status_filter == 'COMPLETED':
+        visits = HomeVisit.objects.filter(status='COMPLETED')
+    elif status_filter == 'CANCELLED':
+        visits = HomeVisit.objects.filter(status='CANCELLED')
+    else:
+        visits = HomeVisit.objects.all()
+
+    return render(request, 'main/home_visits_list.html', {
+        'visits': visits,
+        'status_filter': status_filter,
+    })
+
+
+@login_required
+def doctor_appointments(request):
+    doctor_id = request.user.id  # или если есть идентификатор врача, который связан с пользователем
+    appointments = Appointment.objects.filter(doctor_id=doctor_id, visited=False).order_by('date')
+    home_visits = HomeVisit.objects.filter(doctor_id=doctor_id, status='ASSIGNED').order_by('scheduled_time')
+
+    return render(request, 'main/doctor_appointments.html', {
+        'appointments': appointments,
+        'home_visits': home_visits,
     })

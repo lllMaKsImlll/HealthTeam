@@ -20,11 +20,21 @@
                 <h1>Запись ко врачу онлайн</h1>
                 <div class="item-form">
                     <img src="{% static '/img/profession.png' %}" alt="#">
-                    <input type="text" name="profession" placeholder="Специальность врача" required>
+                    <select name="profession" required>
+                        <option value="">Специальность</option>
+                        {% for prof in professions %}
+                        <option value="{{ prof }}" {% if prof == profession %}selected{% endif %}>{{ prof }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="item-form">
                     <img src="{% static '/img/district.png' %}" alt="#">
-                    <input type="text" name="district" placeholder="Район" required>
+                    <select name="district" required>
+                        <option value="">Район</option>
+                        {% for dist in districts %}
+                            <option value="{{ dist }}" {% if dist == district %}selected{% endif %}>{{ dist }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <button type="submit">Найти</button>
             </form>
