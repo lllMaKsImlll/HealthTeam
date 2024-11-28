@@ -41,4 +41,28 @@
         </div>
     </div>
 </body>
+<script>
+    document.getElementById('appointment-date').addEventListener('change', function() {
+        var selectedDate = this.value;
+        var doctorId = "{{ doctor.id }}";  // ID врача
+
+        // Отправляем запрос на сервер для получения доступных слотов
+        fetch("{% url 'get_available_slots' doctor.id %}?appointment_date=" + selectedDate)
+        .then(response => response.json())
+        .then(data => {
+            // Обновляем список доступных временных слотов
+            var slotSelect = document.getElementById('appointment-time');
+            slotSelect.innerHTML = '';  // Очищаем старые слоты
+
+            data.available_slots.forEach(function(slot) {
+                var option = document.createElement('option');
+                option.value = slot;
+                option.text = slot;
+                slotSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
 </html>

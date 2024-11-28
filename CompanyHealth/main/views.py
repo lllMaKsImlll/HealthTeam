@@ -414,15 +414,18 @@ def make_appointment(request, doctor_id):
 
     doctor = get_object_or_404(Doctor, id=doctor_id)
 
-    current_doctor_id = request.session.get('doctor_id')
-    if current_doctor_id and int(current_doctor_id) == int(doctor_id):
-        return HttpResponseForbidden("Врач не может записаться к самому себе.")
-
     doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor)
 
     available_slots = []
     if doctor_schedule.exists():
         now = datetime.now()
+
+        # Получаем выбранную дату из запроса
+        selected_date = request.GET.get('appointment_date')  # Дата, выбранная пользователем
+        if selected_date:
+            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        else:
+            selected_date = now.date()
 
         for schedule in doctor_schedule:
             start_time = schedule.start_time
@@ -430,19 +433,20 @@ def make_appointment(request, doctor_id):
             break_start = schedule.break_start
             break_end = schedule.break_end
 
-            current_time = datetime.combine(datetime.today(), start_time)
+            # Начинаем с времени начала рабочего дня врача
+            current_time = datetime.combine(selected_date, start_time)
 
             while current_time.time() < end_time:
                 if break_start and break_end:
                     if current_time.time() >= break_start and current_time.time() < break_end:
-                        current_time = datetime.combine(datetime.today(), break_end)
+                        current_time = datetime.combine(selected_date, break_end)
                         continue
 
                 if current_time < now:
                     current_time += timedelta(minutes=30)
                     continue
 
-                appointment_datetime = datetime.combine(datetime.today(), current_time.time())
+                appointment_datetime = datetime.combine(selected_date, current_time.time())
                 existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
                 if existing_appointment.exists():
                     current_time += timedelta(minutes=30)
@@ -463,10 +467,25 @@ def make_appointment(request, doctor_id):
                 'error_message': 'Дата и время приема обязательны.'
             })
 
-        appointment_datetime = datetime.combine(datetime.strptime(appointment_date, "%Y-%m-%d").date(),
-                                                datetime.strptime(appointment_time, "%H:%M").time())
-        existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+        try:
+            # Убираем лишние символы, если они есть
+            appointment_time = appointment_time.strip()
+            if ":" in appointment_time and appointment_time.count(":") > 1:
+                appointment_time = appointment_time.rsplit(":", 1)[0]
 
+            # Преобразование даты и времени в объекты
+            appointment_datetime = datetime.combine(
+                datetime.strptime(appointment_date, "%Y-%m-%d").date(),
+                datetime.strptime(appointment_time, "%H:%M").time()
+            )
+        except ValueError:
+            return render(request, 'main/make_appointment.html', {
+                'doctor': doctor,
+                'available_slots': available_slots,
+                'error_message': 'Неверный формат даты или времени.'
+            })
+
+        existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
         if existing_appointment.exists():
             return render(request, 'main/make_appointment.html', {
                 'doctor': doctor,
@@ -474,16 +493,67 @@ def make_appointment(request, doctor_id):
                 'error_message': 'Этот временной слот уже занят.'
             })
 
+        # Создаем запись
         Appointment.objects.create(
             patient=patient,
             doctor=doctor,
             date=appointment_datetime,
             description=description
         )
-
         return redirect('profile')
 
     return render(request, 'main/make_appointment.html', {'doctor': doctor, 'available_slots': available_slots})
+
+def get_available_slots(request, doctor_id):
+    selected_date = request.GET.get('appointment_date')  # Получаем дату из запроса
+    available_slots = set()  # Используем set, чтобы автоматически исключать дубли
+
+    if selected_date:
+        try:
+            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date format'}, status=400)
+
+        doctor = get_object_or_404(Doctor, id=doctor_id)
+        doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor)
+
+        now = datetime.now()
+
+        for schedule in doctor_schedule:
+            start_time = schedule.start_time
+            end_time = schedule.end_time
+            break_start = schedule.break_start
+            break_end = schedule.break_end
+
+            current_time = datetime.combine(selected_date, start_time)
+
+            while current_time.time() < end_time:
+                # Пропускаем время, если оно попадает в перерыв
+                if break_start and break_end:
+                    if break_start <= current_time.time() < break_end:
+                        current_time = datetime.combine(selected_date, break_end)
+                        continue
+
+                # Пропускаем время, если оно уже прошло
+                if current_time < now:
+                    current_time += timedelta(minutes=30)
+                    continue
+
+                # Проверяем, есть ли запись на текущее время
+                appointment_datetime = datetime.combine(selected_date, current_time.time())
+                existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+                if existing_appointment.exists():
+                    current_time += timedelta(minutes=30)
+                    continue
+
+                # Добавляем слот в множество
+                available_slots.add(current_time.time())
+                current_time += timedelta(minutes=30)
+
+    # Преобразуем множество обратно в список для JSON
+    sorted_slots = sorted(list(available_slots))  # Сортируем для корректного отображения
+
+    return JsonResponse({'available_slots': sorted_slots})
 
 @login_required
 def cancel_appointment(request):
