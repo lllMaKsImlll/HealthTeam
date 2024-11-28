@@ -77,7 +77,18 @@
 
         <div class="ask-question-block">
             <h2>Есть вопросы? - Задавай</h2>
-            <form method="POST" action="{% url 'ask_question' %}">
+
+            <!-- Отображение сообщений -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p class="message {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Форма -->
+            <form method="POST" action="{% url 'index' %}">
                 {% csrf_token %}
                 <input type="text" name="question" placeholder="Введите вопрос" required><br>
                 <button type="submit">Задать</button>

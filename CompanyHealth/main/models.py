@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -8,7 +7,6 @@ class Patient(models.Model):
     email = models.CharField('Почта', max_length=100)
     image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
     password = models.CharField('Пароль', max_length=120)
-
     class Meta:
         verbose_name = "Пациент"
         verbose_name_plural = "Пациенты"
@@ -34,9 +32,8 @@ class Doctor(models.Model):
         ('M', 'Мужчина'),
         ('F', 'Женщина'),
     ]
-
     fio = models.CharField('ФИО', max_length=100)
-    phone = models.CharField('Номер', max_length=11)
+    phone = models.CharField('Номер телефона', max_length=11)
     email = models.CharField('Почта', max_length=100)
     profession = models.CharField('Специальность', max_length=65)
     experience = models.IntegerField('Стаж')

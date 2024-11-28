@@ -54,8 +54,8 @@ def register_view(request):
 
 @login_required
 def home(request):
-    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
-    districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
+    professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
+    districts = ["Центральный", "Калининский", "Курчатовский", "Ленинский", "Металлургический", "Советский", "Тракторозаводский"]
 
     patient_id = request.session.get('patient_id')
     doctor_id = request.session.get('doctor_id')
@@ -76,14 +76,16 @@ def home(request):
             doctor = None
 
     if request.method == "POST":
-        question_text = request.POST.get('question').strip()
-
-        Question.objects.create(
-            email=patient.email,
-            question_text=question_text
-        )
-
-        return redirect('success_page')
+        question_text = request.POST.get('question', '').strip()
+        print("метод пост")
+        if patient:
+            Question.objects.create(
+                email=patient.email,
+                question_text=question_text
+            )
+            return redirect('ask_question')
+        else:
+            return redirect('home')
 
     records = Record.objects.all()
 
@@ -92,14 +94,15 @@ def home(request):
         'patient': patient,
         'doctor': doctor,
         'professions': professions,
-        'districts': districts
+        'districts': districts,
     })
+
 
 
 @login_required
 def profile_view(request):
     user_type = request.session.get('user_type')
-    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
+    professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
 
     if user_type == 'patient':
         patient_id = request.session.get('patient_id')
@@ -165,8 +168,11 @@ from .models import Doctor
 
 
 def appointments_view(request):
-    professions = ['Терапевт', 'Хирург', 'Педиатр', 'Офтальмолог']
-    districts = ['Центральный', 'Ленинский', 'Советский', 'Калининский']
+    professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
+    districts = ["Центральный", "Калининский", "Курчатовский", "Ленинский", "Металлургический", "Советский", "Тракторозаводский"]
+    genders = ['Мужчина', 'Женищина']
+    experience_choices = [5, 10, 15, 20, 30]
+
     patient_id = request.session.get('patient_id')
     doctor_id = request.session.get('doctor_id')
 
@@ -211,7 +217,9 @@ def appointments_view(request):
         'patient': patient,
         'doctor': doctor,
         'professions': professions,
-        'districts': districts
+        'districts': districts,
+        'experience_choices': experience_choices,
+        'genders': genders
     })
 
 
@@ -503,6 +511,8 @@ def specific_appointment_for_patient(request, appointment_id):
         recommendations = request.POST.get('recommendations', '').strip()
         visited = request.POST.get('visited') == 'on'
 
+        print(recommendations)
+
         appointment.recommendations = recommendations
         appointment.visited = visited
         appointment.save()
@@ -586,6 +596,8 @@ def doctor_appointments(request):
         'home_visits': home_visits,
         'doctor': doctor
     })
+
+
 
 def ask_question_view(request):
     return render(request, 'main/ask_success.html')
