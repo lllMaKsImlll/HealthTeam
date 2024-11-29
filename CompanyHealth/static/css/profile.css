@@ -36,6 +36,15 @@
     font-size: 35px;
 }
 
+.profile-details .call-doctor {
+    display: flex;
+    gap: 5px;
+}
+
+.profile-details .call-doctor .details-button {
+    margin-top: 0;
+}
+
 /* Фильтр */
 .filters {
     gap: 10px;
@@ -55,8 +64,20 @@
 }
 
 .filters form button,
-.filters form input {
+.filters form input,
+.filters from select {
     border-radius: 10px;
+    width: 250px;
+}
+
+.filters form select {
+    color: gray;
+    padding: 10px 20px;
+}
+
+.filters h3 {
+    margin-bottom: 20px;
+    margin-left: 5px;
 }
 
 /* Записи на прием */

@@ -1,0 +1,72 @@
+/* Страница: Вызвать врача на дом */
+.visit-home {
+    margin: 50px auto;
+    max-width: 650px;
+}
+
+.visit-home button{
+    display: block;
+    width: 300px;
+    margin: 10px auto 0 auto;
+}
+
+/* Страница: История вызовов врачей на дом */
+.visit-list {
+    margin: 50px auto;
+}
+
+.visit-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
+
+.visit-list thead tr {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+}
+
+.visit-list th, .visit-list td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.visit-list thead th {
+    font-weight: bold;
+    color: #333;
+}
+
+.visit-list tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.visit-list tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.visit-list td {
+    color: #555;
+    word-wrap: break-word;
+}
+
+.visit-list td[colspan="6"] {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+.visit-list tbody tr td:first-child {
+    font-weight: bold;
+}
+
+.visit-list tbody tr td:last-child {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.visit-list .table-container {
+    overflow-x: auto;
+}

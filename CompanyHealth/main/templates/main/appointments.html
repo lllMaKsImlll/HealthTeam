@@ -5,6 +5,7 @@
     {% load static %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/profile.css' %}">
     <title>Запись ко врачу</title>
 </head>
 <body>
@@ -17,21 +18,25 @@
             <!-- Основная форма для поиска врачей по специальности и району -->
             <form action="{% url 'appointments' %}" method="post">
                 {% csrf_token %}
-                <label for="profession">Специальность:</label>
-                <select name="profession" id="profession">
-                    <option value="">Выберите специальность</option>
-                    {% for prof in professions %}
-                    <option value="{{ prof }}" {% if prof == profession %}selected{% endif %}>{{ prof }}</option>
-                    {% endfor %}
-                </select>
+                <div class="item-form ml">
+                    <label for="profession">Специальность:</label>
+                    <select name="profession" id="profession">
+                        <option value="">Выберите специальность</option>
+                        {% for prof in professions %}
+                        <option value="{{ prof }}" {% if prof == profession %}selected{% endif %}>{{ prof }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <label for="district">Район:</label>
-                <select name="district" id="district">
-                    <option value="">Выберите район</option>
-                    {% for dist in districts %}
-                    <option value="{{ dist }}" {% if dist == district %}selected{% endif %}>{{ dist }}</option>
-                    {% endfor %}
-                </select>
+                <div class="item-form">
+                    <label for="district">Район:</label>
+                    <select name="district" id="district">
+                        <option value="">Выберите район</option>
+                        {% for dist in districts %}
+                        <option value="{{ dist }}" {% if dist == district %}selected{% endif %}>{{ dist }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
                 <button id="record-button" type="submit">Поиск</button>
             </form>
@@ -41,21 +46,19 @@
         </div>
 
         <!-- Блок с дополнительными фильтрами (Пол, Стаж) -->
-        <div class="filter-box">
+        <div class="container filters">
             <h3>Дополнительные фильтры</h3>
             <form action="{% url 'appointments' %}" method="post">
                 {% csrf_token %}
 
-                <label for="gender">Пол:</label>
-                <select name="gender" id="gender">
+                <select id="gender">
                     <option value="">Выберите пол</option>
                     {% for g in genders %}
                     <option value="{{ g }}" {% if g == gender %}selected{% endif %}>{{ g }}</option>
                     {% endfor %}
                 </select>
 
-                <label for="experience">Стаж:</label>
-                <select name="experience" id="experience">
+                <select id="experience">
                     <option value="">Выберите стаж</option>
                     {% for exp in experience_choices %}
                     <option value="{{ exp }}" {% if exp == experience %}selected{% endif %}>От {{ exp }} лет</option>
@@ -63,6 +66,9 @@
                 </select>
 
                 <button type="submit">Применить фильтры</button>
+                <a href="{% url request.resolver_match.url_name %}">
+                    <button type="button">Сбросить фильтр</button>
+                </a>
             </form>
         </div>
 

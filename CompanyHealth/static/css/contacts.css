@@ -22,7 +22,8 @@
 }
 
 .contacts .map {
-    margin: 20px auto;
+    margin: 25px auto;
+    max-width: 1450px;
 }
 
 .contacts .map iframe{

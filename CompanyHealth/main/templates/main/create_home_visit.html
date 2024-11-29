@@ -1,28 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Вызвать врача на дом</title>
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/visit-home.css' %}">
 </head>
 <body>
-    <form method="post" action="{% url 'create_home_visit' %}">
-        {% csrf_token %}
-        <label for="patient_name">Имя пациента:</label>
-        <input type="text" id="patient_name" name="patient_name" required>
+    {% include 'main/header.html' %}
+    <div class="container visit-home">
+        <form method="post" action="{% url 'create_home_visit' %}">
+            <h1>Вызовите врача на дом</h1>
+            {% csrf_token %}
+            <label for="patient_name">Имя пациента:</label>
+            <input type="text" id="patient_name" name="patient_name" required>
 
-        <label for="patient_phone">Телефон:</label>
-        <input type="text" id="patient_phone" name="patient_phone" required>
+            <label for="patient_phone">Телефон:</label>
+            <input type="text" id="patient_phone" name="patient_phone" required>
 
-        <label for="address">Адрес вызова:</label>
-        <textarea id="address" name="address" required></textarea>
+            <label for="address">Адрес вызова:</label>
+            <textarea id="address" name="address" required></textarea>
 
-        <label for="symptoms">Симптомы:</label>
-        <textarea id="symptoms" name="symptoms"></textarea>
+            <label for="symptoms">Симптомы:</label>
+            <textarea id="symptoms" name="symptoms"></textarea>
 
-        <button type="submit">Отправить</button>
-    </form>
-    <a href="{% url 'profile' %}">
-        <button class="good-button">Отмена</button>
-    </a>
+            <button class="details-button" type="submit">Отправить</button>
+        </form>
+        <a href="{% url 'profile' %}">
+            <button class="bad-button">Отмена</button>
+        </a>
+    </div>
 </body>
 </html>

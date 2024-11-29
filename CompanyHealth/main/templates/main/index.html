@@ -12,8 +12,8 @@
 
     <main>
         <div class="sub-header">
-            <div class="image-subheader">
-                <img src="{% static '/img/doctors.png' %}" alt="img-subheader">
+            <div class="image-sub-header">
+                <img style="margin-bottom: -6   px;" src="{% static '/img/doctors.png' %}" alt="img-sub-header">
             </div>
             <form method="post" action="{% url 'appointments' %}">
                 {% csrf_token %}
@@ -90,7 +90,7 @@
             <!-- Форма -->
             <form method="POST" action="{% url 'index' %}">
                 {% csrf_token %}
-                <input type="text" name="question" placeholder="Введите вопрос" required><br>
+                <input type="text" name="question" placeholder="Введите вопрос" required>
                 <button type="submit">Задать</button>
             </form>
         </div>

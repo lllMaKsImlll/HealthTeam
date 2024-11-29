@@ -21,21 +21,24 @@
                 <div class="profile-details">
                     <h2>{{ patient.fio }}</h2>
                     <p>{{ patient.email }}</p>
+                    <p>{{ patient.phone }}</p>
                     <a href="{% url 'logout' %}">
                         <button class="bad-button">Выйти</button>
                     </a>
                     <a href="{% url 'editProfile' %}">
-                        <button class="good-button">Редактоировать профиль</button>
+                        <button class="good-button">Редактировать профиль</button>
                     </a>
                     <a href="{% url 'appointments' %}">
                         <button class="good-button">Записаться ко врачу</button>
                     </a>
-                    <a href="{% url 'create_home_visit' %}">
-                        <button class="good-button">Вызов врача на дом</button>
-                    </a>
-                    <a href="{% url 'home_visits_list' %}">
-                        <button class="good-button">Вызовы на дом</button>
-                    </a>
+                    <div class="call-doctor">
+                        <a href="{% url 'create_home_visit' %}">
+                            <button class="details-button">Врач на дом</button>
+                        </a>
+                        <a href="{% url 'home_visits_list' %}">
+                            <button class="details-button">Вызовы на дом</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

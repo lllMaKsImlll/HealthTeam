@@ -9,14 +9,13 @@
 </head>
 <body>
     {% include 'main/header.html' %}
-    <div class="block">
-        <div class="container-makeAppointments">
-            <div class="profile-container-img">
-                <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="doctor-img">
-            </div>
-            <h1>{{ doctor.fio }}</h1>
-            <h2>Данные для записи</h2>
-            <form method="POST">
+    <div class="container-makeAppointments">
+        <div class="profile-container-img">
+            <img src="{% if doctor.image %}{{ doctor.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="doctor-img">
+        </div>
+        <h1>{{ doctor.fio }}</h1>
+        <h2>Данные для записи</h2>
+        <form method="POST">
                 {% csrf_token %}
 
                 <label for="appointment-date">Дата приема:</label>
@@ -38,7 +37,6 @@
                     <p class="error">{{ error_message }}</p>
                 {% endif %}
             </form>
-        </div>
     </div>
 </body>
 <script>

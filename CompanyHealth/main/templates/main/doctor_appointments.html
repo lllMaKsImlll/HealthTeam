@@ -5,36 +5,39 @@
     <meta charset="UTF-8">
     <title>Приемы врача</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/visit-home.css' %}">
 </head>
 <body>
-    <h1>Приемы для врача {{ doctor.fio }} </h1>
-
-    <div class="home-visits">
-        <h2>Визиты на дом</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Пациент</th>
-                    <th>Адрес</th>
-                    <th>Запланированное время</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for visit in home_visits %}
+    {% include 'main/header.html' %}
+    <div class="container visit-list">
+        <h1>Приемы для врача {{ doctor.fio }} </h1>
+        <div class="home-visits">
+            <h2><span>Визиты на дом</span></h2>
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ visit.patient_name }}</td>
-                        <td>{{ visit.address }}</td>
-                        <td>{{ visit.scheduled_time|date:"d.m.Y H:i" }}</td>
-                        <td>{{ visit.get_status_display }}</td>
+                        <th>Пациент</th>
+                        <th>Адрес</th>
+                        <th>Запланированное время</th>
+                        <th>Статус</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="4">У вас нет назначенных визитов на дом.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for visit in home_visits %}
+                        <tr>
+                            <td>{{ visit.patient_name }}</td>
+                            <td>{{ visit.address }}</td>
+                            <td>{{ visit.scheduled_time|date:"d.m.Y H:i" }}</td>
+                            <td>{{ visit.get_status_display }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">У вас нет назначенных визитов на дом.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
