@@ -5,6 +5,8 @@ from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
 from datetime import datetime, timedelta, time
 from django.http import HttpResponseForbidden, JsonResponse
+from django.utils.timezone import make_aware
+from django.utils.timezone import now as timezone_now
 from django.utils import timezone
 
 
@@ -85,7 +87,7 @@ def home(request):
             )
             return redirect('ask_question')
         else:
-            return redirect('home')
+            return redirect('login')
 
     records = Record.objects.all()
 
@@ -414,46 +416,60 @@ def make_appointment(request, doctor_id):
 
     doctor = get_object_or_404(Doctor, id=doctor_id)
 
-    doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor)
-
     available_slots = []
-    if doctor_schedule.exists():
-        now = datetime.now()
+    now = timezone.now()  # Получаем текущее время в правильной временной зоне
 
-        # Получаем выбранную дату из запроса
-        selected_date = request.GET.get('appointment_date')  # Дата, выбранная пользователем
-        if selected_date:
+    selected_date = request.GET.get('appointment_date')
+    if selected_date:
+        try:
             selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        else:
+        except ValueError:
             selected_date = now.date()
+    else:
+        selected_date = now.date()
 
-        for schedule in doctor_schedule:
-            start_time = schedule.start_time
-            end_time = schedule.end_time
-            break_start = schedule.break_start
-            break_end = schedule.break_end
+    doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor, date=selected_date).first()
 
-            # Начинаем с времени начала рабочего дня врача
-            current_time = datetime.combine(selected_date, start_time)
+    if doctor_schedule:
+        start_time = doctor_schedule.start_time
+        end_time = doctor_schedule.end_time
+        break_start = doctor_schedule.break_start
+        break_end = doctor_schedule.break_end
 
-            while current_time.time() < end_time:
-                if break_start and break_end:
-                    if current_time.time() >= break_start and current_time.time() < break_end:
-                        current_time = datetime.combine(selected_date, break_end)
-                        continue
+        # Функция для получения доступных слотов
+        current_time = datetime.combine(selected_date, start_time)
+        step = timedelta(minutes=30)
 
-                if current_time < now:
-                    current_time += timedelta(minutes=30)
+        # Обрабатываем доступные слоты
+        while current_time.time() < end_time:
+            if break_start and break_end:
+                # Пропускаем перерыв
+                if break_start <= current_time.time() < break_end:
+                    current_time = datetime.combine(selected_date, break_end)
                     continue
 
-                appointment_datetime = datetime.combine(selected_date, current_time.time())
-                existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
-                if existing_appointment.exists():
-                    current_time += timedelta(minutes=30)
-                    continue
+            appointment_datetime = timezone.make_aware(current_time)
 
+            # Исключаем слоты, которые уже прошли
+            if appointment_datetime < now:
+                current_time += step
+                continue
+
+            existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+            if existing_appointment.exists():
+                current_time += step
+                continue
+
+            # Добавляем слот, если он не прошел и не занят
+            if appointment_datetime > now:
                 available_slots.append(current_time.time())
-                current_time += timedelta(minutes=30)
+
+            current_time += step
+    else:
+        available_slots = []
+        error_message = "На выбранную дату отсутствует расписание. Выберите другую дату."
+
+    print(available_slots)  # Для отладки
 
     if request.method == "POST":
         appointment_date = request.POST.get('appointment_date')
@@ -468,16 +484,11 @@ def make_appointment(request, doctor_id):
             })
 
         try:
-            # Убираем лишние символы, если они есть
-            appointment_time = appointment_time.strip()
-            if ":" in appointment_time and appointment_time.count(":") > 1:
-                appointment_time = appointment_time.rsplit(":", 1)[0]
-
-            # Преобразование даты и времени в объекты
-            appointment_datetime = datetime.combine(
+            # Формируем aware datetime для записи
+            appointment_datetime = timezone.make_aware(datetime.combine(
                 datetime.strptime(appointment_date, "%Y-%m-%d").date(),
                 datetime.strptime(appointment_time, "%H:%M").time()
-            )
+            ))
         except ValueError:
             return render(request, 'main/make_appointment.html', {
                 'doctor': doctor,
@@ -493,7 +504,6 @@ def make_appointment(request, doctor_id):
                 'error_message': 'Этот временной слот уже занят.'
             })
 
-        # Создаем запись
         Appointment.objects.create(
             patient=patient,
             doctor=doctor,
@@ -502,58 +512,13 @@ def make_appointment(request, doctor_id):
         )
         return redirect('profile')
 
-    return render(request, 'main/make_appointment.html', {'doctor': doctor, 'available_slots': available_slots})
+    return render(request, 'main/make_appointment.html', {
+        'doctor': doctor,
+        'available_slots': available_slots,
+        'selected_date': selected_date,
+        'error_message': error_message if 'error_message' in locals() else None
+    })
 
-def get_available_slots(request, doctor_id):
-    selected_date = request.GET.get('appointment_date')  # Получаем дату из запроса
-    available_slots = set()  # Используем set, чтобы автоматически исключать дубли
-
-    if selected_date:
-        try:
-            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
-        except ValueError:
-            return JsonResponse({'error': 'Invalid date format'}, status=400)
-
-        doctor = get_object_or_404(Doctor, id=doctor_id)
-        doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor)
-
-        now = datetime.now()
-
-        for schedule in doctor_schedule:
-            start_time = schedule.start_time
-            end_time = schedule.end_time
-            break_start = schedule.break_start
-            break_end = schedule.break_end
-
-            current_time = datetime.combine(selected_date, start_time)
-
-            while current_time.time() < end_time:
-                # Пропускаем время, если оно попадает в перерыв
-                if break_start and break_end:
-                    if break_start <= current_time.time() < break_end:
-                        current_time = datetime.combine(selected_date, break_end)
-                        continue
-
-                # Пропускаем время, если оно уже прошло
-                if current_time < now:
-                    current_time += timedelta(minutes=30)
-                    continue
-
-                # Проверяем, есть ли запись на текущее время
-                appointment_datetime = datetime.combine(selected_date, current_time.time())
-                existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
-                if existing_appointment.exists():
-                    current_time += timedelta(minutes=30)
-                    continue
-
-                # Добавляем слот в множество
-                available_slots.add(current_time.time())
-                current_time += timedelta(minutes=30)
-
-    # Преобразуем множество обратно в список для JSON
-    sorted_slots = sorted(list(available_slots))  # Сортируем для корректного отображения
-
-    return JsonResponse({'available_slots': sorted_slots})
 
 @login_required
 def cancel_appointment(request):
@@ -609,6 +574,13 @@ def specific_appointment_for_doctor(request, appointment_id):
     })
 
 def create_home_visit(request):
+    patient_id = request.session.get('patient_id')
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+
     if request.method == 'POST':
         patient_name = request.POST['patient_name']
         patient_phone = request.POST['patient_phone']
@@ -624,12 +596,13 @@ def create_home_visit(request):
         )
         return redirect('home_visits_list')  # Переход на страницу со списком вызовов
 
-    return render(request, 'main/create_home_visit.html')
+    return render(request, 'main/create_home_visit.html', {
+        'patient': patient
+    })
 
 
 from django.shortcuts import render
 from .models import HomeVisit
-
 
 def home_visits_list(request):
     status_filter = request.GET.get('status', 'PENDING')
@@ -650,7 +623,6 @@ def home_visits_list(request):
         'status_filter': status_filter,
     })
 
-
 @login_required
 def doctor_appointments(request):
     doctor_id = request.session.get('doctor_id')
@@ -666,8 +638,6 @@ def doctor_appointments(request):
         'home_visits': home_visits,
         'doctor': doctor
     })
-
-
 
 def ask_question_view(request):
     return render(request, 'main/ask_success.html')

@@ -22,5 +22,4 @@ urlpatterns = [
     path('create_home_visit/', views.create_home_visit, name='create_home_visit'),
     path('doctor/appointments/', views.doctor_appointments, name='doctor_appointments'),
     path('ask_question/', views.ask_question_view, name='ask_question'),
-    path('get_available_slots/<int:doctor_id>/', views.get_available_slots, name='get_available_slots'),
 ]

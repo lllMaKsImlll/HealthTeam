@@ -15,52 +15,28 @@
         </div>
         <h1>{{ doctor.fio }}</h1>
         <h2>Данные для записи</h2>
-        <form method="POST">
-                {% csrf_token %}
+        <form method="GET" id="date-form">
+            {% csrf_token %}
 
-                <label for="appointment-date">Дата приема:</label>
-                <input type="date" id="appointment-date" name="appointment_date" required>
+            <label for="appointment-date">Дата приема:</label>
+            <input type="date" id="appointment-date" name="appointment_date" value="{{ selected_date|date:'Y-m-d' }}" onchange="this.form.submit();" required>
 
-                <label for="appointment-time">Время приема:</label>
-                <select id="appointment-time" name="appointment_time" required>
-                    {% for slot in available_slots %}
-                        <option value="{{ slot|date:'H:i' }}">{{ slot|date:'H:i' }}</option>
-                    {% endfor %}
-                </select>
+            <label for="appointment-time">Время приема:</label>
+            <select id="appointment-time" name="appointment_time" required>
+                {% for slot in available_slots %}
+                    <option value="{{ slot|date:'H:i' }}">{{ slot|date:'H:i' }}</option>
+                {% endfor %}
+            </select>
 
-                <label for="description">Описание проблемы:</label>
-                <textarea id="description" name="description" placeholder="Опишите вашу проблему" required></textarea>
+            <label for="description">Описание проблемы:</label>
+            <textarea id="description" name="description" placeholder="Опишите вашу проблему" required>{{ description }}</textarea>
 
-                <button type="submit">Записаться</button>
+            <button type="submit">Записаться</button>
 
-                {% if error_message %}
-                    <p class="error">{{ error_message }}</p>
-                {% endif %}
-            </form>
+            {% if error_message %}
+                <p class="error">{{ error_message }}</p>
+            {% endif %}
+        </form>
     </div>
 </body>
-<script>
-    document.getElementById('appointment-date').addEventListener('change', function() {
-        var selectedDate = this.value;
-        var doctorId = "{{ doctor.id }}";  // ID врача
-
-        // Отправляем запрос на сервер для получения доступных слотов
-        fetch("{% url 'get_available_slots' doctor.id %}?appointment_date=" + selectedDate)
-        .then(response => response.json())
-        .then(data => {
-            // Обновляем список доступных временных слотов
-            var slotSelect = document.getElementById('appointment-time');
-            slotSelect.innerHTML = '';  // Очищаем старые слоты
-
-            data.available_slots.forEach(function(slot) {
-                var option = document.createElement('option');
-                option.value = slot;
-                option.text = slot;
-                slotSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    });
-</script>
-
 </html>
