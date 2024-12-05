@@ -172,56 +172,42 @@ from .models import Doctor
 def appointments_view(request):
     professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
     districts = ["Центральный", "Калининский", "Курчатовский", "Ленинский", "Металлургический", "Советский", "Тракторозаводский"]
-    genders = ['Мужчина', 'Женищина']
+    genders = ['Мужчина', 'Женщина']
     experience_choices = [5, 10, 15, 20, 30]
 
-    patient_id = request.session.get('patient_id')
-    doctor_id = request.session.get('doctor_id')
+    search_results = Doctor.objects.all()
 
-    patient = None
-    doctor = None
+    # Сохраняем фильтры для передачи в шаблон
+    profession = request.POST.get('profession', '').strip()
+    district = request.POST.get('district', '').strip()
+    gender = request.POST.get('gender', '').strip()
+    experience = request.POST.get('experience', '').strip()
 
-    if patient_id:
+    # Применяем фильтры
+    if profession:
+        search_results = search_results.filter(profession__icontains=profession)
+    if district:
+        search_results = search_results.filter(area__icontains=district)
+    if gender:
+        gender_mapping = {'Мужчина': 'M', 'Женщина': 'F'}
+        search_results = search_results.filter(gender=gender_mapping.get(gender, ''))
+    if experience:
         try:
-            patient = Patient.objects.get(id=patient_id)
-        except Patient.DoesNotExist:
-            patient = None
-
-    if doctor_id:
-        try:
-            doctor = Doctor.objects.get(id=doctor_id)
-        except Doctor.DoesNotExist:
-            doctor = None
-
-    search_results = None
-    profession = ''
-    area = ''  # Изменить название переменной на 'area', а не 'district'
-
-    if profession == '' and area == '':  # Правильная проверка по 'area'
-        search_results = Doctor.objects.all()
-
-    if request.method == "POST":
-        profession = request.POST.get('profession', '').strip()
-        area = request.POST.get('district', '').strip()  # Здесь берем значение из формы как 'district'
-
-        query = Doctor.objects.all()
-        if profession:
-            query = query.filter(profession__icontains=profession)
-        if area:  # Здесь фильтруем по 'area', а не 'district'
-            query = query.filter(area__icontains=area)
-
-        search_results = query if query.exists() else []
+            experience = int(experience)
+            search_results = search_results.filter(experience__gte=experience)
+        except ValueError:
+            pass
 
     return render(request, 'main/appointments.html', {
         'search_results': search_results,
         'profession': profession,
-        'district': area,  # Используем 'area' как 'district' в шаблоне
-        'patient': patient,
-        'doctor': doctor,
+        'district': district,
+        'gender': gender,
+        'experience': experience,
         'professions': professions,
         'districts': districts,
+        'genders': genders,
         'experience_choices': experience_choices,
-        'genders': genders
     })
 
 
@@ -417,7 +403,7 @@ def make_appointment(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
 
     available_slots = []
-    now = timezone.now()  # Получаем текущее время в правильной временной зоне
+    now = timezone.now()
 
     selected_date = request.GET.get('appointment_date')
     if selected_date:
@@ -441,7 +427,7 @@ def make_appointment(request, doctor_id):
         step = timedelta(minutes=30)
 
         # Обрабатываем доступные слоты
-        while current_time.time() < end_time:
+        while current_time.time() <= end_time:
             if break_start and break_end:
                 # Пропускаем перерыв
                 if break_start <= current_time.time() < break_end:
@@ -460,7 +446,6 @@ def make_appointment(request, doctor_id):
                 current_time += step
                 continue
 
-            # Добавляем слот, если он не прошел и не занят
             if appointment_datetime > now:
                 available_slots.append(current_time.time())
 
@@ -484,7 +469,6 @@ def make_appointment(request, doctor_id):
             })
 
         try:
-            # Формируем aware datetime для записи
             appointment_datetime = timezone.make_aware(datetime.combine(
                 datetime.strptime(appointment_date, "%Y-%m-%d").date(),
                 datetime.strptime(appointment_time, "%H:%M").time()
@@ -546,7 +530,7 @@ def specific_appointment_for_patient(request, appointment_id):
         recommendations = request.POST.get('recommendations', '').strip()
         visited = request.POST.get('visited') == 'on'
 
-        print(recommendations)
+        print(f"рекомендации: {recommendations}")
 
         appointment.recommendations = recommendations
         appointment.visited = visited

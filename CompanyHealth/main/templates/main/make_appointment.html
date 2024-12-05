@@ -15,7 +15,7 @@
         </div>
         <h1>{{ doctor.fio }}</h1>
         <h2>Данные для записи</h2>
-        <form method="GET" id="date-form">
+        <form method="post" id="date-form">
             {% csrf_token %}
 
             <label for="appointment-date">Дата приема:</label>

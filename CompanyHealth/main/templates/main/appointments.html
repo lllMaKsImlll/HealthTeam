@@ -45,20 +45,23 @@
             <img src="{% static '/img/icon2.png' %}" alt="picture 4">
         </div>
 
-        <!-- Блок с дополнительными фильтрами (Пол, Стаж) -->
         <div class="container filters">
             <h3>Дополнительные фильтры</h3>
             <form action="{% url 'appointments' %}" method="post">
                 {% csrf_token %}
 
-                <select id="gender">
+                <!-- Скрытые поля для сохранения основных фильтров -->
+                <input type="hidden" name="profession" value="{{ profession }}">
+                <input type="hidden" name="district" value="{{ district }}">
+
+                <select id="gender" name="gender">
                     <option value="">Выберите пол</option>
                     {% for g in genders %}
                     <option value="{{ g }}" {% if g == gender %}selected{% endif %}>{{ g }}</option>
                     {% endfor %}
                 </select>
 
-                <select id="experience">
+                <select id="experience" name="experience">
                     <option value="">Выберите стаж</option>
                     {% for exp in experience_choices %}
                     <option value="{{ exp }}" {% if exp == experience %}selected{% endif %}>От {{ exp }} лет</option>
