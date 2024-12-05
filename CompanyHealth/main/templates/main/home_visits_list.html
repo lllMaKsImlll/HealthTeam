@@ -13,6 +13,7 @@
         <form method="get">
             <label for="status">Фильтр по статусу:</label>
             <select name="status" id="status">
+                <option value="ALL" {% if status_filter == 'ALL' %}selected{% endif %}>Все вызовы</option>
                 <option value="PENDING" {% if status_filter == 'PENDING' %}selected{% endif %}>В ожидании</option>
                 <option value="ASSIGNED" {% if status_filter == 'ASSIGNED' %}selected{% endif %}>Назначен врач</option>
                 <option value="COMPLETED" {% if status_filter == 'COMPLETED' %}selected{% endif %}>Завершено</option>

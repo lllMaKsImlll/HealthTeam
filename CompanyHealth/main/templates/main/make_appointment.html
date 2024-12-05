@@ -19,7 +19,7 @@
             {% csrf_token %}
 
             <label for="appointment-date">Дата приема:</label>
-            <input type="date" id="appointment-date" name="appointment_date" value="{{ selected_date|date:'Y-m-d' }}" onchange="this.form.submit();" required>
+            <input type="date" id="appointment-date" name="appointment_date" value="{{ selected_date|date:'Y-m-d' }}"" required>
 
             <label for="appointment-time">Время приема:</label>
             <select id="appointment-time" name="appointment_time" required>
@@ -38,5 +38,43 @@
             {% endif %}
         </form>
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateInput = document.getElementById("appointment-date");
+        const timeSelect = document.getElementById("appointment-time");
+
+        dateInput.addEventListener("change", function() {
+            const selectedDate = dateInput.value;
+
+            // Отправляем AJAX-запрос для обновления доступных слотов
+            fetch(`?appointment_date=${selectedDate}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Очищаем и обновляем select с доступными слотами
+                timeSelect.innerHTML = "";
+                if (data.slots && data.slots.length > 0) {
+                    data.slots.forEach(slot => {
+                        const option = document.createElement("option");
+                        option.value = slot;
+                        option.textContent = slot;
+                        timeSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement("option");
+                    option.textContent = "Нет доступных слотов";
+                    option.disabled = true;
+                    timeSelect.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error("Ошибка получения слотов:", error);
+            });
+        });
+    });
+</script>
 </body>
 </html>

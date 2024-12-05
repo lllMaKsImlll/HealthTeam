@@ -401,10 +401,9 @@ def make_appointment(request, doctor_id):
         return redirect('login')
 
     doctor = get_object_or_404(Doctor, id=doctor_id)
-
-    available_slots = []
     now = timezone.now()
 
+    # Получение выбранной даты
     selected_date = request.GET.get('appointment_date')
     if selected_date:
         try:
@@ -414,93 +413,73 @@ def make_appointment(request, doctor_id):
     else:
         selected_date = now.date()
 
+    # Получение доступных слотов
+    available_slots = []
     doctor_schedule = DoctorSchedule.objects.filter(doctor=doctor, date=selected_date).first()
-
     if doctor_schedule:
         start_time = doctor_schedule.start_time
         end_time = doctor_schedule.end_time
         break_start = doctor_schedule.break_start
         break_end = doctor_schedule.break_end
 
-        # Функция для получения доступных слотов
         current_time = datetime.combine(selected_date, start_time)
         step = timedelta(minutes=30)
 
-        # Обрабатываем доступные слоты
         while current_time.time() <= end_time:
-            if break_start and break_end:
-                # Пропускаем перерыв
-                if break_start <= current_time.time() < break_end:
-                    current_time = datetime.combine(selected_date, break_end)
-                    continue
+            if break_start and break_end and break_start <= current_time.time() < break_end:
+                current_time = datetime.combine(selected_date, break_end)
+                continue
 
             appointment_datetime = timezone.make_aware(current_time)
-
-            # Исключаем слоты, которые уже прошли
             if appointment_datetime < now:
                 current_time += step
                 continue
 
             existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
-            if existing_appointment.exists():
-                current_time += step
-                continue
-
-            if appointment_datetime > now:
-                available_slots.append(current_time.time())
+            if not existing_appointment.exists():
+                available_slots.append(current_time.time().strftime('%H:%M'))
 
             current_time += step
-    else:
-        available_slots = []
-        error_message = "На выбранную дату отсутствует расписание. Выберите другую дату."
 
-    print(available_slots)  # Для отладки
+    # Если запрос AJAX, возвращаем JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'slots': available_slots})
 
+    error_message = None
     if request.method == "POST":
         appointment_date = request.POST.get('appointment_date')
         appointment_time = request.POST.get('appointment_time')
         description = request.POST.get('description', '').strip()
 
         if not appointment_date or not appointment_time:
-            return render(request, 'main/make_appointment.html', {
-                'doctor': doctor,
-                'available_slots': available_slots,
-                'error_message': 'Дата и время приема обязательны.'
-            })
+            error_message = 'Дата и время приема обязательны.'
+        else:
+            try:
+                appointment_datetime = timezone.make_aware(datetime.combine(
+                    datetime.strptime(appointment_date, "%Y-%m-%d").date(),
+                    datetime.strptime(appointment_time, "%H:%M").time()
+                ))
+            except ValueError:
+                error_message = 'Неверный формат даты или времени.'
 
-        try:
-            appointment_datetime = timezone.make_aware(datetime.combine(
-                datetime.strptime(appointment_date, "%Y-%m-%d").date(),
-                datetime.strptime(appointment_time, "%H:%M").time()
-            ))
-        except ValueError:
-            return render(request, 'main/make_appointment.html', {
-                'doctor': doctor,
-                'available_slots': available_slots,
-                'error_message': 'Неверный формат даты или времени.'
-            })
+            existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
+            if existing_appointment.exists():
+                error_message = 'Этот временной слот уже занят.'
 
-        existing_appointment = Appointment.objects.filter(doctor=doctor, date=appointment_datetime)
-        if existing_appointment.exists():
-            return render(request, 'main/make_appointment.html', {
-                'doctor': doctor,
-                'available_slots': available_slots,
-                'error_message': 'Этот временной слот уже занят.'
-            })
-
-        Appointment.objects.create(
-            patient=patient,
-            doctor=doctor,
-            date=appointment_datetime,
-            description=description
-        )
-        return redirect('profile')
+            if not error_message:
+                Appointment.objects.create(
+                    patient=patient,
+                    doctor=doctor,
+                    date=appointment_datetime,
+                    description=description
+                )
+                return redirect('profile')
 
     return render(request, 'main/make_appointment.html', {
         'doctor': doctor,
         'available_slots': available_slots,
         'selected_date': selected_date,
-        'error_message': error_message if 'error_message' in locals() else None
+        'error_message': error_message
     })
 
 
@@ -589,7 +568,7 @@ from django.shortcuts import render
 from .models import HomeVisit
 
 def home_visits_list(request):
-    status_filter = request.GET.get('status', 'PENDING')
+    status_filter = request.GET.get('status', 'ALL')
 
     if status_filter == 'PENDING':
         visits = HomeVisit.objects.filter(status='PENDING')
@@ -606,6 +585,8 @@ def home_visits_list(request):
         'visits': visits,
         'status_filter': status_filter,
     })
+
+
 
 @login_required
 def doctor_appointments(request):
