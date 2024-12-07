@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     font-family: "Inter", sans-serif;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 ul {
@@ -17,7 +17,7 @@ a {
 
 main {
     background-color: #F2F2F2;
-    padding: 50px 0;
+    padding: 30px 0;
 }
 
 span {
@@ -27,7 +27,7 @@ span {
 /* Основной контейнер контента страниц */
 .container {
     max-width: 1450px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
     background-color: white;
     border-radius: 25px;
     padding: 40px;
@@ -38,6 +38,12 @@ span {
     text-align: left;
     font-size: 50px;
     font-weight: bold;
+}
+
+@media screen and (max-width: 1570px) {
+    .container {
+        margin: 0px 20px;
+    }
 }
 
 /* Кнопки */
@@ -93,7 +99,7 @@ form input {
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
-    width: 400px;
+    width: 300px;
     background-color: #D9D9D9;
 }
 
@@ -107,7 +113,7 @@ form button {
 }
 
 form select {
-    width: 400px;
+    width: 300px;
     padding: 5px 15px;
     border: none;
     border-radius: 10px;
@@ -244,14 +250,14 @@ form .item-form img {
 }
 
 .records-blocks {
-    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 30px;
 }
 
 .records-blocks .record-block {
-    max-width: 1500px;
-    margin: 20px auto;
     background-color: #D9D9D9;
-    border-radius: 30px;
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -309,13 +315,13 @@ form .item-form img {
 }
 
 /* Есть вопросы? */
+.ask-block {
+    padding: 30px;
+}
+
 .ask-question-block {
-    text-align: left;
-    padding: 20px 30px;
-    margin: 40px auto;
-    max-width: 1500px;
+    text-align: center !important;
     background-color: #63C1AF;
-    border-radius: 40px;
 }
 
 .ask-question-block h2 {
@@ -460,4 +466,10 @@ header .profile img {
 
 header .profile p:hover{
     color: #D74848;
+}
+
+/* Страница: Задать вопросы */
+.ask-success, .ask-success h1 {
+    text-align: center !important;
+    line-height: 1.5;
 }

@@ -6,6 +6,12 @@
     gap: 40px;
 }
 
+@media screen and (max-width: 1100px) {
+    .profile {
+        flex-direction: column;
+    }
+}
+
 .profile .profile-img {
     width: 320px;
     height: 320px;
@@ -55,6 +61,8 @@
 
 .filters form {
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .filters form button {
@@ -67,7 +75,7 @@
 .filters form input,
 .filters from select {
     border-radius: 10px;
-    width: 250px;
+    width: 255px;
 }
 
 .filters form select {
@@ -91,7 +99,7 @@
     align-items: center;
     background: #fff;
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
     width: 100%;
@@ -106,6 +114,13 @@
     font-style: italic;
 }
 
+@media screen and (max-width: 1100px) {
+    .appointment-card {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 .appointment-card h4 {
     font-size: 30px;
 }
@@ -118,6 +133,14 @@
     display: flex;
     align-items: center;
 }
+
+@media screen and (max-width: 1100px) {
+    .pacient-info {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 
 .pacient-img {
     width: 170px;
@@ -158,7 +181,7 @@
 
 /* Посещенные записи */
 .visited {
-    margin-top: 40px !important;
+    margin-top: 40px !important;+
 }
 
 /* Общий стиль карточки */

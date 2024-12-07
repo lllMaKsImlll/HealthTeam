@@ -42,23 +42,21 @@
 
         {% if records %}
             <div class="records-blocks">
-                <div class="title">
-                    <h1>Настоящие отзывы клиентов</h1>
-                    {% for record in records %}
-                    <div class="record-block">
-                        <img src="{% if record.image %}{{ record.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="record image">
-                        <div class="record-content">
-                            <div class="center">
-                                <p>"{{ record.record }}"</p>
-                                <br/>
-                                <div class="record-meta">
-                                    <p>{{ record.name }}, {{ record.date }}</p>
-                                </div>
+                <h1>Настоящие отзывы клиентов</h1>
+                {% for record in records %}
+                <div class="record-block container">
+                    <img src="{% if record.image %}{{ record.image.url }}{% else %}{% static '/img/defalt.png' %}{% endif %}" alt="record image">
+                    <div class="record-content">
+                        <div class="center">
+                            <p>"{{ record.record }}"</p>
+                            <br/>
+                            <div class="record-meta">
+                                <p>{{ record.name }}, {{ record.date }}</p>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         {% endif %}
 
@@ -75,24 +73,26 @@
             </div>
         </div>
 
-        <div class="ask-question-block">
-            <h2>Есть вопросы? - Задавай</h2>
+        <div class="ask-block">
+            <div class="ask-question-block container">
+                <h2>Есть вопросы? - Задавай</h2>
 
-            <!-- Отображение сообщений -->
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <p class="message {{ message.tags }}">{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
+                <!-- Отображение сообщений -->
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <p class="message {{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            <!-- Форма -->
-            <form method="POST" action="{% url 'index' %}">
-                {% csrf_token %}
-                <input type="text" name="question" placeholder="Введите вопрос" required>
-                <button type="submit">Задать</button>
-            </form>
+                <!-- Форма -->
+                <form method="POST" action="{% url 'index' %}">
+                    {% csrf_token %}
+                    <input type="text" name="question" placeholder="Введите вопрос" required>
+                    <button type="submit">Задать</button>
+                </form>
+            </div>
         </div>
 
         

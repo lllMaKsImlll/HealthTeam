@@ -4,7 +4,7 @@ from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
 from datetime import datetime, timedelta, time
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse, HttpResponse
 from django.utils.timezone import make_aware
 from django.utils.timezone import now as timezone_now
 from django.utils import timezone
@@ -393,7 +393,7 @@ def editProfile_view(request):
 def make_appointment(request, doctor_id):
     patient_id = request.session.get('patient_id')
     if not patient_id:
-        return HttpResponseForbidden("Врач не может записаться к другому врачу!")
+        return HttpResponse("alert", content_type="application/x-javascript")
 
     try:
         patient = Patient.objects.get(id=patient_id)

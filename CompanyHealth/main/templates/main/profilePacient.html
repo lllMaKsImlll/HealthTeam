@@ -46,7 +46,7 @@
         <div class="container filters">
             <form method="get">
                 <select name="specialty">
-                    <option value="">Выберите специальность</option>
+                    <option value="">Специальность</option>
                     {% for profession in professions %}
                     <option value="{{ profession }}" {% if profession == filter_specialty %}selected{% endif %}>
                         {{ profession }}
