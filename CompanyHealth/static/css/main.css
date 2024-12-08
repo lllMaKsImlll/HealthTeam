@@ -8,6 +8,7 @@
 
 ul {
     margin-left: 40px;
+    list-style: none;
 }
 
 a {
@@ -17,11 +18,16 @@ a {
 
 main {
     background-color: #F2F2F2;
-    padding: 30px 0;
+    padding: 0 0 30px 0;
 }
 
 span {
     color: #63C1AF;
+}
+
+.services span {
+    color: black;
+    font-weight: bold;
 }
 
 /* Основной контейнер контента страниц */
@@ -172,6 +178,32 @@ header button {
     color: black;
 }
 
+.nav-header {
+    background-color: #F2F2F2;
+    padding: 20px 0;
+}
+
+.nav-header nav ul{;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0;
+}
+
+.nav-header nav ul li{
+    padding: 5px 10px;
+    background-color: #63C1AF;
+    border-radius: 15px;
+    color: white;
+    transition: scale 0.5s ease;
+}
+
+.nav-header nav ul li:hover{
+    scale: 1.05;
+}
+
+
+
 /* Подвал */
 footer {
     background-color: #63C1AF;
@@ -213,7 +245,7 @@ footer ul a:hover {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin: 40px 0;
+    margin: 0 0 40px 0;
     padding: 20px 20px 0 20px;
 }
 

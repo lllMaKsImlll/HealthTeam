@@ -12,7 +12,7 @@
         <div class="city-index">
             <span>г. Челябинск</span>
         </div>
-        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register' and request.resolver_match.view_name != 'profile' and request.resolver_match.view_name != 'editProfile' and request.resolver_match.view_name != 'make_appointment' and request.resolver_match.view_name != 'home_visits_list'%}
+        {% if request.resolver_match.view_name != 'login' and request.resolver_match.view_name != 'register' and request.resolver_match.view_name != 'profile' and request.resolver_match.view_name != 'editProfile' and request.resolver_match.view_name != 'make_appointment' and request.resolver_match.view_name != 'home_visits_list' and request.resolver_match.view_name != 'ask_question'%}
             {% if patient %}
                 <a href="{% url 'profile' %}">
                     <div class="profile">
@@ -37,3 +37,14 @@
         {% endif %}
     </div>
 </header>
+<div class="nav-header">
+    <nav>
+        <ul class="main-nav">
+            <a href="{% url 'ourServices' %}"><li>Услуги</li></a>
+            <a href="{% url 'contacts' %}"><li>Контакты</li></a>
+            <a href="{% url 'aboutUs' %}"><li>О нас</li></a>
+            <a href="{% url 'news' %}"><li>Новости</li></a>
+            <a href="{% url 'questions' %}"><li>Вопросы</li></a>
+        </ul>
+    </nav>
+</div>
