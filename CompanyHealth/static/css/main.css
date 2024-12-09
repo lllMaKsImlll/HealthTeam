@@ -505,3 +505,28 @@ header .profile p:hover{
     text-align: center !important;
     line-height: 1.5;
 }
+
+/* Страница: Новости */
+.block-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.block-item img{
+    border-radius: 25px;
+    width: 600px;
+}
+
+.block-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+}
+
+.block-item:nth-child(odd) img{
+    order: 1;
+}

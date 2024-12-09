@@ -12,18 +12,20 @@
   <main>
     <div class="container news">
       <h1>Новости и обновления</h1>
-      <p>Будьте в курсе всех изменений и событий на нашем сайте и в сфере здравоохранения. </p>
+      <p>Будьте в курсе всех изменений и событий на нашем сайте и в сфере здравоохранения. </p> <br>
       <div class="block-items">
           <!-- не ужели занялся новостями, пиши свои классы, я там оставил место -->
         {% for news in news_list %}
             <div class="block-item">
                 <img src="{% if news.image %}{{ news.image.url }}{% else %}{% static '/img/defalt-news.png' %}{% endif %}" alt="img-news" class="">
-                <h2 class="">{{ news.title }}</h2>
-                <p class="">
-                    {{ news.text|truncatechars:300 }}
-                    <a style="color: #63C1AF" href="{{ news.link }}" class="" target="_blank">Еще</a>
-                </p>
-                <div class="meta-data">{{ news.date }}</div>
+                <div class="block-content">
+                    <h2>{{ news.title }}</h2>
+                    <p>
+                        {{ news.text|truncatechars:300 }}
+                        <a href="{{ news.link }}" class="" target="_blank"><span>Еще</span></a>
+                    </p>
+                    <div class="meta-data"><span>{{ news.date }}</span></div>
+                </div>
             </div>
         {% empty %}
             <p style="font-weight: bold;">Пока новостей нет.</p>
