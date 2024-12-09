@@ -3,12 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
 from .forms import LoginForm, RegistrationForm
-from datetime import datetime, timedelta, time
-from django.http import HttpResponseForbidden, JsonResponse, HttpResponse
-from django.utils.timezone import make_aware
-from django.utils.timezone import now as timezone_now
+from datetime import datetime, timedelta
+from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
-
 
 def login_view(request):
     next_url = request.GET.get('next', 'profile')
@@ -20,14 +17,12 @@ def login_view(request):
 
             patient = Patient.objects.filter(phone=phone).first()
             if patient and patient.check_password(password):
-                # Устанавливаем сессию для пациента
                 request.session['user_type'] = 'patient'
                 request.session['patient_id'] = patient.id
                 return redirect(next_url)
 
             doctor = Doctor.objects.filter(phone=phone).first()
             if doctor and doctor.check_password(password):
-                # Устанавливаем сессию для доктора
                 request.session['user_type'] = 'doctor'
                 request.session['doctor_id'] = doctor.id
                 return redirect(next_url)
@@ -79,7 +74,6 @@ def home(request):
 
     if request.method == "POST":
         question_text = request.POST.get('question', '').strip()
-        print("метод пост")
         if patient:
             Question.objects.create(
                 email=patient.email,
@@ -103,13 +97,10 @@ def home(request):
 
 @login_required
 def profile_view(request):
-    user_type = request.session.get('user_type')
+    patient_id = request.session.get('patient_id')
     professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
 
-    if user_type == 'patient':
-        patient_id = request.session.get('patient_id')
-        if not patient_id:
-            return render(request, 'main/profilePacient.html', {'error': 'Пациент не найден.'})
+    if patient_id:
 
         patient = get_object_or_404(Patient, id=patient_id)
 
@@ -133,11 +124,8 @@ def profile_view(request):
             'filter_date': filter_date,
         })
 
-    elif user_type == 'doctor':
+    else:
         doctor_id = request.session.get('doctor_id')
-        if not doctor_id:
-            return render(request, 'main/profileDoctor.html', {'error': 'Доктор не найден.'})
-
         doctor = get_object_or_404(Doctor, id=doctor_id)
         upcoming_appointments = Appointment.objects.filter(doctor=doctor).exclude(visited=True)
         visited_appointments = Appointment.objects.filter(doctor=doctor, visited=True)
@@ -164,11 +152,6 @@ def logout_view(request):
         del request.session['doctor_id']
     return redirect('index')
 
-
-from django.shortcuts import render
-from .models import Doctor
-
-
 def appointments_view(request):
     professions = ["Терапевт", "Хирург", "Педиатр", "Офтальмолог", "Кардиолог", "Невролог", "Эндокринолог", "Дерматолог", "Уролог", "Гинеколог", "Отоларинголог (ЛОР)", "Стоматолог", "Психиатр", "Пульмонолог", "Гастроэнтеролог", "Ревматолог", "Онколог", "Травматолог-ортопед", "Фтизиатр", "Инфекционист", "Нефролог", "Гематолог", "Аллерголог-иммунолог", "Венеролог", "Сосудистый хирург", "Ангиолог", "Анестезиолог-реаниматолог", "Маммолог", "Проктолог", "Гепатолог", "Косметолог", "Физиотерапевт", "Логопед", "Дефектолог", "Генетик"]
     districts = ["Центральный", "Калининский", "Курчатовский", "Ленинский", "Металлургический", "Советский", "Тракторозаводский"]
@@ -177,13 +160,19 @@ def appointments_view(request):
 
     search_results = Doctor.objects.all()
 
-    # Сохраняем фильтры для передачи в шаблон
+    patient_id = request.session.get('patient_id')
+    if patient_id:
+        try:
+            patient = Patient.objects.get(id=patient_id)
+        except Patient.DoesNotExist:
+            patient = None
+
     profession = request.POST.get('profession', '').strip()
     district = request.POST.get('district', '').strip()
+
     gender = request.POST.get('gender', '').strip()
     experience = request.POST.get('experience', '').strip()
 
-    # Применяем фильтры
     if profession:
         search_results = search_results.filter(profession__icontains=profession)
     if district:
@@ -208,9 +197,8 @@ def appointments_view(request):
         'districts': districts,
         'genders': genders,
         'experience_choices': experience_choices,
+        'patient': patient
     })
-
-
 
 def contacts_view(request):
     patient_id = request.session.get('patient_id')
