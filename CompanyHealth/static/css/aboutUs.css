@@ -4,20 +4,26 @@
     flex-direction: column;
 }
 
-.about-us .block-item {
+.about-us .block-item-about {
     margin-top: 20px;
     padding: 20px;
     background-color: #64C1AE;
 }
 
-.about-us .block-item h2{
+.about-us .block-item-about h2{
     font-size: 50px;
 }
 
-.about-us .block-item:nth-child(odd) {
+.about-us .block-item-about ul{
+    list-style-type: disc !important;
+    color: black;
+}
+
+
+.about-us .block-item-about:nth-child(odd) {
     border-radius: 40px 0 40px 0;
 }
 
-.about-us .block-item:nth-child(even) {
+.about-us .block-item-about:nth-child(even) {
     border-radius: 0 40px 0 40px;
 }

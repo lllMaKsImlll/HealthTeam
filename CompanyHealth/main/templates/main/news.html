@@ -22,7 +22,7 @@
                     <h2>{{ news.title }}</h2>
                     <p>
                         {{ news.text|truncatechars:300 }}
-                        <a href="{{ news.link }}" class="" target="_blank"><span>Еще</span></a>
+                        <a href="{% url 'news_detail' news.id %}" class=""><span>Еще</span></a>
                     </p>
                     <div class="meta-data"><span>{{ news.date }}</span></div>
                 </div>

@@ -144,7 +144,6 @@ class News(models.Model):
     title = models.CharField('Заголовок', max_length=200)
     text = models.TextField('Описание новости')
     date = models.CharField('Дата выпуска новости', max_length=30)
-    link = models.CharField('Ссылка на источник', max_length=400)
     image = models.ImageField('Изображение для новости', null=True, blank=True, upload_to='images/')
 
     class Meta:

@@ -6,49 +6,47 @@
     justify-content: center;
 }
 
-.services .block-item {
+.services .block-item-service {
     display: flex;
     margin-top: 20px;
 }
 
-.services .block-item .block-text{
+.services .block-item-service .block-text{
     padding: 30px;
     text-align: justify;
     background-color: #63C1AF;
     line-height: 1.35;
 }
 
-.services .block-item .block-text h2{
+.services .block-item-service .block-text h2{
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 20px;
 }
 
-.services .block-item .block-text ul span{
+.services .block-item-service .block-text ul span{
     font-weight: bold;
 }
 
-
-
-.services .block-items .block-item:nth-child(odd) img{
+.services .block-items-service .block-item-service:nth-child(odd) img{
     border-radius: 40px 0 0 0;
 }
 
-.services .block-items .block-item:nth-child(odd) .block-text{
+.services .block-items-service .block-item-service:nth-child(odd) .block-text{
     border-radius: 0 0 40px 0;
 }
 
-.services .block-items .block-item:nth-child(even) img{
+.services .block-items-service .block-item-service:nth-child(even) img{
     border-radius: 0 40px 0 0;
 }
 
-.services .block-items .block-item:nth-child(even) .block-text{
+.services .block-items-service .block-item-service:nth-child(even) .block-text{
     border-radius: 0 0 0 40px;
 }
 
 
 
-.services .block-item img {
+.services .block-item-service img {
     max-width: 700px;
     height: 340px;
 }

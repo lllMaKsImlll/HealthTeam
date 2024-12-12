@@ -527,6 +527,31 @@ header .profile p:hover{
     gap: 25px;
 }
 
+.block-content p{
+    text-align: justify;
+}
+
+.block-content h2{
+    font-size: 3vh;
+}
+
 .block-item:nth-child(odd) img{
     order: 1;
+}
+
+/* Отдельная страница: Новости */
+.news-detail img {
+    border-radius: 20px;
+    margin: 20px auto;
+    width: 600px;
+    display: block;
+}
+
+.news-detail .news-text p {
+    text-align: justify;
+}
+
+.news-detail .back-link button {
+    margin: 20px auto;
+    display: block;
 }

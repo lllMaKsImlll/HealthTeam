@@ -595,3 +595,6 @@ def doctor_appointments(request):
 def ask_question_view(request):
     return render(request, 'main/ask_success.html')
 
+def news_detail(request, pk):
+    news = get_object_or_404(News, pk=pk)
+    return render(request, 'main/news_detail.html', {'news': news})
