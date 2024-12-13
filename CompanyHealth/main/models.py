@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
+import locale
 
 class Patient(models.Model):
     fio = models.CharField('ФИО', max_length=100)
@@ -89,7 +91,7 @@ class Doctor(models.Model):
     room = models.CharField('Кабинет', max_length=50)
     area = models.CharField('Район работы', max_length=100, choices=DISTRICT_CHOICES)
     adress = models.CharField('Адрес кабинета', max_length=120)
-    image = models.ImageField('Изображение профиля', null=True, blank=True, upload_to='images/')
+    image = models.ImageField('Изображение профиля', blank=True, upload_to='images/')
     password = models.CharField('Пароль', max_length=120)
     gender = models.CharField('Пол', max_length=1, choices=GENDER_CHOICES, default='M')
 
@@ -140,6 +142,8 @@ class Record(models.Model):
     def __str__(self):
         return f"{self.name} {self.date}"
 
+
+
 class News(models.Model):
     title = models.CharField('Заголовок', max_length=200)
     text = models.TextField('Описание новости')
@@ -150,8 +154,14 @@ class News(models.Model):
         verbose_name = "Новости"
         verbose_name_plural = "Новости"
 
+    def save(self, *args, **kwargs):
+        if not self.date:
+            self.date = datetime.now().strftime('%d.%m.%Y')
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f" новость {self.title} от {self.date}"
+        return f"новость {self.title} от {self.date}"
+
 
 
 class HomeVisit(models.Model):

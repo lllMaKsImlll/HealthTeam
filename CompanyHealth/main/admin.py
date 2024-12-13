@@ -5,9 +5,13 @@ admin.site.register(Doctor)
 admin.site.register(Patient)
 admin.site.register(Record)
 admin.site.register(Appointment)
-admin.site.register(News)
 admin.site.register(DoctorSchedule)
 admin.site.register(Question)
+
+class NewsAdmin(admin.ModelAdmin):
+    exclude = ('date',)
+
+admin.site.register(News, NewsAdmin)
 
 @admin.register(HomeVisit)
 class HomeVisitAdmin(admin.ModelAdmin):
