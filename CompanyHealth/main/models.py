@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
-import locale
 
 class Patient(models.Model):
     fio = models.CharField('ФИО', max_length=100)
