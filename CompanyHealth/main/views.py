@@ -160,6 +160,8 @@ def appointments_view(request):
 
     search_results = Doctor.objects.all()
 
+    patient = None  # Initialize patient variable
+
     patient_id = request.session.get('patient_id')
     if patient_id:
         try:
@@ -197,8 +199,9 @@ def appointments_view(request):
         'districts': districts,
         'genders': genders,
         'experience_choices': experience_choices,
-        'patient': patient
+        'patient': patient  # Always pass patient (either None or fetched)
     })
+
 
 def contacts_view(request):
     patient_id = request.session.get('patient_id')
